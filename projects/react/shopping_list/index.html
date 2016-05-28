@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+	    
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <title>thedanielweber.com - ReactJS Sample App</title>
+	    <script src="/js/jquery-1.11.0.min.js"></script>
+	    	
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+	    <!-- Optional theme -->
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">	   
+	    
+		<script src="js/browser.js"></script>
+		<script src="js/react.js"></script>
+ 
+
+	    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	    
+	    <!--[if lt IE 9]>
+	      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	    <![endif]-->  
+	       
+	</head>
+	<body>
+
+<style>
+
+.container-fluid { padding-right:0 !important; padding-left:0 !important; }
+
+</style>
+
+		<div class="container-fluid">
+
+		    <nav class="navbar navbar-inverse navbar-static-top">
+		      <div class="container">
+		        <div class="navbar-header">
+		          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		            <span class="sr-only">Toggle navigation</span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		          </button>
+		          <a id="top" class="navbar-brand" href="/">thedanielweber.com</a>
+		        </div>
+		        <div id="navbar" class="navbar-collapse collapse">
+		          <ul class="nav navbar-nav">
+		            <li class="active"><a href="/">Home</a></li>
+		            <!--
+		            <li><a href="#about">About</a></li>
+		            <li><a href="#contact">Contact</a></li>
+		            -->
+		            <li class="dropdown">
+		              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Projects <span class="caret"></span></a>
+		              <ul class="dropdown-menu">
+		                <li><a href="/projects/jquery/smoke.html">jQuery Smoke</a></li>
+		                <li><a href="/projects/react_todo_app/">React.JS</a></li>
+		                <li><a href="/projects/angularjs/">AngularJS Grocery Shopping App</a></li>
+		                <li><a href="/projects/yeoman_angular/">Yeoman Created Angular App</a></li>
+		                <li role="separator" class="divider"></li>
+		                <li class="dropdown-header">Nav header</li>
+		                <li><a href="#">Separated link</a></li>
+		                <li><a href="#">One more separated link</a></li>
+		              </ul>
+		            </li>
+		            <li class="dropdown">
+		              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials <span class="caret"></span></a>
+		              <ul class="dropdown-menu">
+		                <li><a href="/tutorials/react/">React.JS</a></li>
+		              </ul>
+		            </li>              
+		          </ul>
+		        </div>
+		      </div>
+		    </nav>
+
+		</div>
+
+
+<script type="text/jsx">
+/** @jsx React.DOM */
+
+var master_id = 1000;
+
+var AddListItem = React.createClass({
+  handleSubmit: function (event) {
+    event.preventDefault();
+
+    var id = master_id++;
+
+    var item = {
+      id: id,
+      date: new Date(),
+      name: this.refs.name.getDOMNode().value.trim(),
+      description: this.refs.description.getDOMNode().value.trim(),
+      quantity: this.refs.quantity.getDOMNode().value
+    };
+
+    this.props.handleAddListItem(item);
+  },
+  render: function () {
+    var styleRequired = {
+      color: "#ffaaaa"
+    };
+
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <h3 className="page-header">Add New Item</h3>
+
+        <div className="form-group">
+          <label htmlFor="listItemName">Name <span style={styleRequired}>*</span></label>
+          <input type="text" className="form-control" id="listItemName" placeholder="Enter name" required ref="name" />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="listItemDescription">Description</label>
+          <textarea className="form-control" rows="3" id="listItemDescription" placeholder="Enter description" ref="description"></textarea>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="listItemQuantity">Quantity <span style={styleRequired}>*</span></label>
+          <div className="row">
+            <div className="col-xs-5 col-sm-6 col-md-4">
+              <input type="number" min="1" max="9999" step="1" defaultValue="1" className="form-control" id="listItemQuantity" required ref="quantity" />
+            </div>
+          </div>
+        </div>
+
+        <hr />
+
+        <button type="submit" className="btn btn-primary">Add to list</button>
+        <button type="reset" className="btn btn-link">Cancel</button>
+      </form>
+    );
+  }
+});
+
+
+
+var ListHeader = React.createClass({
+  handleSubmit: function (event) {
+    event.preventDefault();
+
+    this.props.removeAllListItems();
+  },
+
+  render: function () {
+    var totalNumberOfListItems = this.props.totalNumberOfListItems;
+
+    if (totalNumberOfListItems > 0) {
+      return (
+        <form onSubmit={this.handleSubmit} className="form-inline">
+          {this.props.totalNumberOfListItems} {totalNumberOfListItems === 1 ? 'item' : 'items'}
+          {' '}
+          <button className="btn btn-xs btn-default" type="submit">Remove all</button>
+        </form>
+      );
+    }
+
+    return (<span>Shopping List</span>);
+  }
+});
+
+var EmptyList = React.createClass({
+  render: function () {
+    return (
+      <div>
+        There are no items in your list.
+      </div>
+    );
+  }
+});
+
+var List = React.createClass({
+  getListOfItemIds: function (items) {
+    return Object.keys(items);
+  },
+
+  getTotalNumberOfListItems: function (items) {
+    var totalNumberOfItems = 0;
+    var item;
+
+    this.getListOfItemIds(items).forEach(function (itemId) {
+      item = items[itemId];
+      totalNumberOfItems = totalNumberOfItems + parseInt(item.quantity, 10);
+    });
+
+    return totalNumberOfItems;
+  },
+
+  createListItemElements: function (items) {
+    var item;
+
+    return (
+      this
+      .getListOfItemIds(items)
+      .map(function (itemId) {
+        item = items[itemId];
+        return (<ListItem item={item} handleRemoveListItem={this.props.removeListItem} key={item.id} />);
+      }.bind(this))
+      .reverse()
+    );
+  },
+
+  render: function () {
+    var items = this.props.items;
+    var listItemElements = this.createListItemElements(items);
+
+    return (
+      <div>
+        <h3 className="page-header">
+          <ListHeader
+            totalNumberOfListItems={this.getTotalNumberOfListItems(items)}
+            removeAllListItems={this.props.removeAllListItems} />
+        </h3>
+        <ul>{listItemElements.length > 0 ? listItemElements : <EmptyList />}</ul>
+      </div>
+    );
+  }
+});
+
+
+
+var Description = React.createClass({
+  render: function () {
+    return (
+      <div className="panel-body">
+        {this.props.description}
+      </div>
+    );
+  }
+});
+
+var ListItem = React.createClass({
+  handleSubmit: function (event) {
+    event.preventDefault();
+
+    this.props.handleRemoveListItem(this.props.item.id);
+  },
+
+  render: function () {
+    var item = this.props.item;
+    return (
+      <div className="panel panel-primary">
+        <div className="panel-heading">
+          {item.quantity} x {item.name}
+        </div>
+
+        {item.description.length > 0 ? <Description description={item.description} /> : ''}
+
+        <div className="panel-footer">
+          <form className="form-inline" onSubmit={this.handleSubmit}>
+            <button type="submit" className="btn btn-default btn-xs">Remove</button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+});
+
+
+
+var ShoppingList = React.createClass({
+  getInitialState: function () {
+    return {
+      list: {}
+    };
+  },
+
+  updateList: function (list) {
+    this.setState({
+      list: list
+    });
+  },
+
+  insertListItem: function (item) {
+    var list = this.state.list;
+
+    console.log("Will add item: ", item);
+    console.log("To list: ", list);
+    //list.push(item);
+
+    this.updateList(list);
+  },
+
+  updateListItem: function (item) {
+  	console.log("Item id: ", item.id);
+
+    var list = this.state.list;
+    list[item.id] = item;
+
+    this.updateList(list);
+  },
+
+  removeListItem: function (itemId) {
+    var list = this.state.list;
+
+    delete list[itemId];
+
+    this.updateList(list);
+  },
+
+  removeAllListItems: function () {
+    this.updateList({});
+  },
+
+  render: function () {
+    var items = this.state.list;
+
+    return (
+      <div className="row">
+        <div className="col-sm-6">
+          <List items={items}
+            removeListItem={this.removeListItem}
+            removeAllListItems={this.removeAllListItems} />
+        </div>
+        <div className="col-sm-6">
+          <AddListItem handleAddListItem={this.updateListItem} />
+        </div>
+      </div>
+    );
+  }
+});
+
+
+var Application = React.createClass({
+  getInitialShoppingListItems: function () {
+    return {};
+  },
+
+  render: function () {
+    return (
+      <div className="container">
+        <ShoppingList items={this.getInitialShoppingListItems()} />
+      </div>
+    );
+  }
+});
+
+
+React.renderComponent(
+    <Application />,
+    document.getElementById('app')
+);
+
+
+</script>
+
+
+		<div class="container content">
+      		<div id="app"></div>
+
+		      <footer>
+		        <p class="pull-right"><a href="#top" data-id="top" class="scroll-link">Back to top</a></p>
+		        <p>&copy; 2015 Daniel Weber</p>
+		      </footer>      		
+		</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.11.1/react.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.11.0/JSXTransformer.js"></script>
+
+	</body>
+</html>

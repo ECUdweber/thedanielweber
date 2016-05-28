@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Daniel L Weber - Calculator</title>
+    <script src="/js/jquery-1.11.0.min.js"></script>
+    	
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+   	
+    
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->  
+        
+</head>
+<body>
+
+<style>
+.italic { font-style: italic; }
+
+/*Calculator*/
+
+.calc-button {
+  height:55px;
+  min-width: 55px;
+}
+
+.calculator-container {
+  max-width: 350px;
+  background: #efefef;
+  padding:20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  box-shadow: 10px 10px 5px #888888; 
+}
+
+.plus {
+  margin-top: -20px;
+}
+button {
+  background-color: black;
+  border-color: black;
+  width: 100%;
+  padding: 20px 30px;
+  border-radius: 2px;
+}
+</style>
+
+<script>
+var operands = ['+', '-', '*', '/', '%', '.'];
+
+function validateClick() {
+  var lastClicked = $('#result').val().slice(-1);
+  
+  for (var i = 0; i < operands.length; i++) {
+    if (operands[i] == lastClicked) {
+      $('#result').val('Err');
+    }
+  }
+}
+
+$( document ).ready(function() {
+
+$('#clear-all').click(function() {
+  $('#result').val('');
+});
+
+$('#clear').click(function() {
+  $('#result').val('');
+});
+
+$('#plus').click(function() {
+  validateClick();
+  $('#result').val($('#result').val() + '+');
+});
+
+$('#openingParen').click(function() {
+  validateClick();
+  $('#result').val($('#result').val() + '(');
+});
+
+$('#closingParen').click(function() {
+  validateClick();
+  $('#result').val($('#result').val() + ')');
+});
+
+$('#minus').click(function() {
+  validateClick();
+  $('#result').val($('#result').val() + '-');
+});
+
+$('#multiply').click(function() {
+  validateClick();
+  $('#result').val($('#result').val() + '*');
+});
+
+$('#division').click(function() {
+  validateClick();
+  $('#result').val($('#result').val() + '/');
+});
+
+$('#mod').click(function() {
+  validateClick();
+  $('#result').val($('#result').val() + '%');
+});
+
+$('#dot').click(function() {
+  validateClick();
+  $('#result').val($('#result').val() + '.');
+});
+
+$('#nine').click(function() {
+  $('#result').val($('#result').val() + 9);
+});
+
+$('#eight').click(function() {
+  $('#result').val($('#result').val() + 8);
+});
+
+$('#seven').click(function() {
+  $('#result').val($('#result').val() + 7);
+});
+
+$('#six').click(function() {
+  $('#result').val($('#result').val() + 6);
+});
+
+$('#five').click(function() {
+  $('#result').val($('#result').val() + 5);
+});
+
+$('#four').click(function() {
+  $('#result').val($('#result').val() + 4);
+});
+
+$('#three').click(function() {
+  $('#result').val($('#result').val() + 3);
+});
+
+$('#two').click(function() {
+  $('#result').val($('#result').val() + 2);
+});
+
+$('#one').click(function() {
+  $('#result').val($('#result').val() + 1);
+});
+
+$('#zero').click(function() {
+  $('#result').val($('#result').val() + 0);
+});
+
+$('#equals').click(function() {
+  $('#result').val(eval($('#result').val()));
+});
+
+});
+
+</script>
+
+   <div class="navbar-wrapper">
+      <div class="container-fluid">
+
+        <nav class="navbar navbar-inverse navbar-static-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a id="top" class="navbar-brand" href="/">thedanielweber.com</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+                <!--
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                -->
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Projects <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/projects/timer/">Countdown Timer</a></li>
+                    <li><a href="/projects/react_todo_app/">Simple React ToDo App</a></li>
+                    <li><a href="/projects/react/shopping_list/">React Shopping List App</a></li>                    
+                    <li><a href="/projects/angularjs/">AngularJS Grocery Shopping App</a></li>
+                    <li><a href="/projects/yeoman_angular/">Yeoman Created Angular App</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li class="dropdown-header">Experimental</li>
+                    <li><a href="/projects/jquery/smoke.html">jQuery Smoke</a></li>                    
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/tutorials/react/">React.JS</a></li>
+                  </ul>
+                </li>                
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+      </div>
+    </div>
+
+<div class="container">
+  <div class="row">
+    <h2 class="text-center text-primary">Custom Calculator</h2>
+    <h4 class="italic text-center">by Daniel Weber</h4>
+  </div>
+  
+  <center>
+    
+    <div class="calculator-container row">
+      <div class="row calc-result-display">
+        <div class="col-md-12">
+          <input id="result" val="" class="form-control">      
+        </div>
+      </div>
+
+<br>
+      
+      <div class="row op-container">
+        <div class="col-md-3">
+          <button type="button" class="btn btn-danger calc-button" id="clear-all">AC</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-default calc-button" id="openingParen">(</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-default calc-button" id="closingParen">)</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-default calc-button" id="division">/</button>
+        </div>                             
+      </div>
+      
+      <br>
+      
+      <div class="row">
+       <div class="col-md-3">
+          <button type="button" class="btn btn-primary calc-button" id="seven">7</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-primary calc-button" id="eight">8</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-primary calc-button" id="nine">9</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-default calc-button" id="multiply">x</button>
+        </div> 
+      </div>
+      
+      <br>
+      
+      <div class="row">
+       <div class="col-md-3">
+          <button type="button" class="btn btn-primary calc-button" id="four">4</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-primary calc-button" id="five">5</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-primary calc-button" id="six">6</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-default calc-button" id="minus">-</button>
+        </div> 
+      </div>
+      
+      <br>
+      
+      <div class="row">
+       <div class="col-md-3">
+          <button type="button" class="btn btn-primary calc-button" id="one">1</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-primary calc-button" id="two">2</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-primary calc-button" id="three">3</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-default calc-button" id="plus">+</button>
+        </div> 
+      </div>
+      
+      <br>
+      
+      <div class="row">
+       <div class="col-md-3">
+          <button type="button" class="btn btn-primary calc-button" id="zero">0</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-default calc-button" id="dot">.</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-default calc-button" id="mod">%</button>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-default calc-button" id="equals">=</button>
+        </div> 
+      </div>    
+      
+    </div>
+    
+  </center> 
+
+<!-- Close Container -->
+</div>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+</body>
+</html>

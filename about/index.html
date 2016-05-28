@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Daniel L Weber</title>
+    <script src="/js/jquery-1.11.0.min.js"></script>
+    <script src="/js/waterpipe.js"></script>
+    	
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+   	
+    
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->  
+    
+    <!-- Custom styles for this template -->
+    <link href="/css/carousel.css" rel="stylesheet">      
+</head>
+<body>
+
+<style>
+.carousel-inner > .item > #img1 {
+	width: 551px !important;
+	height: 475px !important;
+}
+.col-lg-4 {
+    /*width: 25%;*/
+}
+
+.info_circle {
+  background:#337ab7;
+  color:white;
+  font-weight:bold;
+  font-size:20px;
+  border-radius:50%;
+}
+
+.carousel-inner > .item > #img1 {
+  min-width:0% !important;
+  height:auto !important;
+}
+
+.hover_btn {
+  width: 240px;
+  min-height:23px;
+  border-radius:2px;
+  border: solid #23527c 1px; 
+  cursor: pointer !important; 
+  text-align:center;
+  font-size:19px;
+  padding:5px;
+  display:block;
+}
+
+.hover_btn a {
+  text-decoration:none;
+}
+                     
+
+.hover_btn:hover, .hover_btn a:hover {
+  color: white;
+  transition: color 0.4s ease 0s;
+  background:#23527c;
+  text-decoration:none;  
+}
+
+.color_link_box2 {
+  border-radius: 0;
+  background-color: transparent;
+  transition: border-color 0.4s ease 0s, background-color 0.4s ease 0s;
+  border: solid rgba(232, 99, 78, 1) 1px;
+  cursor: pointer !important;
+}
+
+.color_link_box2 {
+  font: normal normal normal 17px/1.4em 'Josefin Slab',serif;
+  transition: color 0.4s ease 0s;
+  color: #E8634E;
+  display: inline-block;
+  margin: -webkit-calc(-1 * 1px) 1px 0;
+  margin: calc(-1 * 1px) 1px 0;
+  position: relative;
+  white-space: nowrap;
+}
+
+#dougs_section {
+  background:-webkit-linear-gradient(top,#337ab7 0,#fff 100%);
+}
+
+#introduction_section, #car_section {
+  /* background: url("/images/me_on_rock.jpg") no-repeat; */
+  background: linear-gradient(#eaebeb, #fff) repeat scroll 0 0 transparent;
+}
+
+</style>
+
+   <div class="navbar-wrapper">
+      <div class="container-fluid">
+
+        <nav class="navbar navbar-inverse navbar-static-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a id="top" class="navbar-brand" href="/">thedanielweber.com</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+                <!--
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                -->
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Projects <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/projects/timer/">Countdown Timer</a></li>
+                    <li><a href="/projects/calculator/">Simple Calculator</a></li>
+                    <li><a href="/projects/react_todo_app/">Simple React ToDo App</a></li>
+                    <li><a href="/projects/react/shopping_list/">React Shopping List App</a></li>                    
+                    <li><a href="/projects/angularjs/">AngularJS Grocery Shopping App</a></li>
+                    <li><a href="/projects/yeoman_angular/">Yeoman Created Angular App</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li class="dropdown-header">Experimental</li>
+                    <li><a href="/projects/jquery/smoke.html">jQuery Smoke</a></li>                    
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tutorials <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/tutorials/react/">React.JS</a></li>
+                  </ul>
+                </li>                
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+      </div>
+    </div>
+
+
+    <!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner" role="listbox">
+      
+        <div class="item active">
+          <center>
+          <img id="img1" class="first-slide" src="/images/me_black-white.jpg" alt="Me" width="300"">          
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Daniel L Weber</h1>
+              <p>Full Stack Developer</p>
+              <p><a class="btn btn-lg btn-primary scroll-link" href="#introduction_section" data-id="introduction_section" role="button">View my skillset</a></p>
+            </div>
+          </div>
+          </center>
+        </div>
+        <div class="item">
+          <img class="second-slide" src="/images/ECU.jpg" alt="ECU">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Education</h1>
+              <p>Bachelors of Science from ECU with a concentration in Software Engineering</p>
+              <!--<p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>-->
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img class="third-slide" src="/images/hire-angular-js-developer.jpg" alt="Angular">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>I have a passion for AngularJS</h1>
+              <p><a class="btn btn-lg btn-primary" href="/projects/angularjs/" role="button">What can I do with Angular?</a></p>
+            </div>
+          </div>
+        </div>   
+      </div>
+      <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div><!-- /.carousel -->
+
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+        
+        <div class="col-lg-4">
+          <img class="img-circle" src="/images/my_face_square.jpg" alt="Me" width="140" height="140">
+          <!--<div class="info_circle img-circle" style="width:140px; height:140px;">About Me</div>-->
+          <h2>Background</h2>
+          <p>A brief introduction.</p>
+          <p><a class="btn btn-default scroll-link" href="#introduction_section" data-id="introduction_section" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        
+        <div class="col-lg-4">
+          <img class="img-circle" src="/images/dougie.jpg" alt="Dougers" width="140" height="140">
+          <h2>Interests</h2>
+          <p>Some of my hobbies.</p>
+          <p><a class="btn btn-default scroll-link" href="#dougs_section" data-id="dougs_section" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+               
+        <div class="col-lg-4">
+          <img class="img-circle" src="/images/my_car_on_CMC.jpg" alt="Me" width="140" height="140">
+          <h2>Contact</h2>
+          <p>How to get in touch with me</p>
+          <p><a class="btn btn-default scroll-link" href="#car_section" data-id="car_section" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        
+      </div><!-- /.row -->
+
+
+      <!-- START THE FEATURETTES -->
+
+      <hr class="featurette-divider">
+
+      <div id="introduction_section" class="row featurette">
+
+        <div class="col-md-7">
+          <h2 id="heading1" class="featurette-heading page-section">A little about me</h2>
+          <p>
+            <b>Experience</b>:
+            <br />
+            I have been working in the industry since 2006. During my senior year in college I was very active in the CSI Club and also interned at a small 
+            software company doing .NET development.
+          </p>
+          <p>
+          Upon graduation, I was offered a position working from home with a startup and have been there for the past 8 years. There are only 2 of us in the company, so it forces me to become
+          proficient in all aspects of development, including developing both front end and back as well as deployment.
+          </p>
+          <p>
+             My favorite technology is hands down AngularJS. Using yeoman to create the scaffolding and jasmine to do 
+             test driven development just makes things so easy that I simply couldn't imagine development without it.
+          </p>
+          <p> 
+            <b>Skills (just a few)</b>: 
+            <br />
+            AngularJS (with Jasmine, Grunt and Yeoman), UI Design & Implementation, Testing, Debugging, and Documentation, Full Stack 
+            Development (MEAN, LAMP), DevOpps, HTML5, CSS3, JavaScript, jQuery, Responsive Web Design, JSON, XML, SQL, MongoDB, Ruby, C++, nginx, Git, Ansible/Docker, Perl, PHP, Yaml, Sass/Compass/LESS          
+          </p>
+          <br />
+          <a href="/files/Daniel_L_Weber.docx" class="lead color_link_box" target="_blank">
+            <span class="lead hover_btn color_link_box_label">Download my Resume</span>
+          </a>
+        </div>
+        <div class="col-md-5 circled_image img-circle">
+          <img class="featurette-image img-responsive center-circle" src="/images/me_looking_straight_ahead_black.jpg" alt="Me looking up">
+          <p class="pull-right"><a href="#top" data-id="top" class="scroll-link">Back to top</a></p>
+        </div>
+
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div id="dougs_section" class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+          <h2 class="featurette-heading page-section"><span class="text-muted">A few of my interests</span></h2>
+          <p class="lead">Learning and playing with new technologies, developer meetups, landscaping, cooking, golf, woodwork, cars, my dogs</p>
+          <p class="pull-right"><a href="#top" data-id="top" class="scroll-link">Back to top</a></p>
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+          <img class="featurette-image img-responsive center-block" src="/images/my_car_on_CMC.jpg" alt="Speed">          
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div id="car_section" class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading"><span class="text-muted">Contact Me</span></h2>
+          <p class="lead">
+            Phone: 704.349.8919
+            <br />
+            <a href="mailto:dw@thedanielweber.com;">Email</a>
+          </p>
+        </div>
+        <div class="col-md-5">
+          <!--<img class="featurette-image img-responsive center-block" src="/images/my_car_on_CMC.jpg" alt="Speed">-->
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <!-- /END THE FEATURETTES -->
+
+
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#top" data-id="top" class="scroll-link">Back to top</a></p>
+        <p>&copy; 2015 Daniel Weber</p>
+      </footer>
+
+    </div><!-- /.container -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> 
+
+<script type="text/javascript">
+$(document).ready(function() {
+	// navigation click actions	
+	$('.scroll-link').on('click', function(event){
+		event.preventDefault();
+		var sectionID = $(this).attr("data-id");
+		scrollToID('#' + sectionID, 750);
+	});
+	// scroll to top action
+	$('.scroll-top').on('click', function(event) {
+		event.preventDefault();
+		$('html, body').animate({scrollTop:0}, 'slow'); 		
+	});
+	// mobile nav toggle
+	$('#nav-toggle').on('click', function (event) {
+		event.preventDefault();
+		$('#main-nav').toggleClass("open");
+	});
+});
+// scroll function
+function scrollToID(id, speed){
+	var offSet = 50;
+	var targetOffset = $(id).offset().top - offSet;
+	var mainNav = $('#main-nav');
+	$('html,body').animate({scrollTop:targetOffset}, speed);
+	if (mainNav.hasClass("open")) {
+		mainNav.css("height", "1px").removeClass("in").addClass("collapse");
+		mainNav.removeClass("open");
+	}
+}
+if (typeof console === "undefined") {
+    console = {
+        log: function() { }
+    };
+}
+</script>
+</body>
+</html>

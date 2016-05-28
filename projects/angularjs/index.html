@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />   
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Daniel L Weber</title>   
+
+    <link rel="stylesheet" href="css/normalize.css">  
+    <link rel="stylesheet" href="css/foundation.css">
+          
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js"></script>
+    <!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>-->  
+    
+    <script src="js/plugins/angular-route.js"></script>
+    <script src="js/plugins/mm-foundation-tpls-0.6.0.js"></script>
+    
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/zurb/foundation-apps-1.1.0.css">
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/zurb/foundation-apps-1.1.0.min.css">
+     
+    <script src="http://cdn.jsdelivr.net/zurb/foundation-apps-1.1.0.js"></script>
+    <script src="http://cdn.jsdelivr.net/zurb/foundation-apps-1.1.0.min.js"></script>     
+    <script src="http://cdn.jsdelivr.net/zurb/foundation-apps-templates-1.1.0.js"></script>
+    <script src="http://cdn.jsdelivr.net/zurb/foundation-apps-templates-1.1.0.min.js"></script>
+</head>
+<body ng-app="myApp">
+
+  <!--
+  Look here for angular-foundation references: http://pineconellc.github.io/angular-foundation/
+  -->
+  
+  <style>
+  .container {
+  	padding:30px;
+  	padding-top:10px;
+  }
+  </style>
+  
+  <div>
+    <top-bar data-topbar role="navigation">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">Home</a></h1>
+        </li>
+        <li toggle-top-bar class="menu-icon"><a href="#">Menu</a></li>
+      </ul>
+  
+      <top-bar-section>
+        <!-- Right Nav Section -->
+        <ul class="right">
+          <li class="active"><a href="#">Active</a></li>
+          <li has-dropdown>
+            <a href="#">Dropdown</a>
+            <ul top-bar-dropdown>
+              <li><a href="#">First link in dropdown</a></li>
+            </ul>
+          </li>
+        </ul>
+  
+        <!-- Left Nav Section -->
+        <ul class="left">
+          <li><a href="#">Another Angular App Holder</a></li>
+        </ul>
+      </top-bar-section>
+    </top-bar>
+  </div>
+  
+  <div ng-controller="mainController">
+    <div ng-view class="view-animate"></div>
+  </div>  
+  
+  <script src="js/controllers/GroceriesController.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

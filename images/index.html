@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Daniel L Weber</title>
+    <script src="/js/jquery-1.11.0.min.js"></script>
+    <script src="/js/waterpipe.js"></script>
+    	
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+   	
+    
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->  
+    
+    <!-- Custom styles for this template -->
+    <link href="/css/carousel.css" rel="stylesheet">      
+</head>
+<body>
+
+<style>
+.carousel-inner > .item > #img1 {
+	width: 551px !important;
+	height: 475px !important;
+}
+.col-lg-4 {
+    /*width: 25%;*/
+}
+
+.info_circle {
+  background:#337ab7;
+  color:white;
+  font-weight:bold;
+  font-size:20px;
+  border-radius:50%;
+}
+
+.carousel-inner > .item > #img1 {
+  min-width:0% !important;
+  height:auto !important;
+}
+
+.hover_btn {
+  width: 240px;
+  min-height:23px;
+  border-radius:2px;
+  border: solid #23527c 1px; 
+  cursor: pointer !important; 
+  text-align:center;
+  font-size:19px;
+  padding:5px;
+  display:block;
+}
+
+.hover_btn a {
+  text-decoration:none;
+}
+                     
+
+.hover_btn:hover, .hover_btn a:hover {
+  color: white;
+  transition: color 0.4s ease 0s;
+  background:#23527c;
+  text-decoration:none;  
+}
+
+.color_link_box2 {
+  border-radius: 0;
+  background-color: transparent;
+  transition: border-color 0.4s ease 0s, background-color 0.4s ease 0s;
+  border: solid rgba(232, 99, 78, 1) 1px;
+  cursor: pointer !important;
+}
+
+.color_link_box2 {
+  font: normal normal normal 17px/1.4em 'Josefin Slab',serif;
+  transition: color 0.4s ease 0s;
+  color: #E8634E;
+  display: inline-block;
+  margin: -webkit-calc(-1 * 1px) 1px 0;
+  margin: calc(-1 * 1px) 1px 0;
+  position: relative;
+  white-space: nowrap;
+}
+
+#dougs_section {
+  background:-webkit-linear-gradient(top,#337ab7 0,#fff 100%);
+}
+
+#introduction_section, #car_section {
+  /* background: url("/images/me_on_rock.jpg") no-repeat; */
+  background: linear-gradient(#eaebeb, #fff) repeat scroll 0 0 transparent;
+}
+
+</style>
+
+  <div class="container-fluid">
+
+    <nav class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a id="top" class="navbar-brand" href="#">thedanielweber.com</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <!--
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            -->
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Projects <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/projects/jquery/smoke.html">jQuery Smoke</a></li>
+                <li><a href="/projects/react/">React.JS</a></li>
+                <li><a href="/projects/angularjs/">AngularJS Grocery Shopping App</a></li>
+                <li><a href="/projects/yeoman_angular/">Yeoman Created Angular App</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+  </div>
+
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+      <div class="row">
+      	<p>React JS</p>
+      </div>
+
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+        
+        <div class="col-lg-4">
+          <!--<div class="info_circle img-circle" style="width:140px; height:140px;">About Me</div>-->
+          <h2>Overview</h2>
+          <p>A brief overview of ReactJS.</p>
+          <p><a class="btn btn-default scroll-link" href="#react_overview" data-id="react_overview" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        
+        <div class="col-lg-4">
+          <h2>React</h2>
+          <p>A look at reacts core concepts.</p>
+          <p><a class="btn btn-default scroll-link" href="#react_concepts" data-id="react_concepts" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+               
+        <div class="col-lg-4">
+          <h2>FLUX</h2>
+          <p>Using Flux</p>
+          <p><a class="btn btn-default scroll-link" href="#flux_section" data-id="flux_section" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        
+      </div><!-- /.row -->
+
+
+      <!-- START THE FEATURETTES -->
+
+      <hr class="featurette-divider">
+
+      <div id="react_overview" class="row featurette">
+        <div class="col-md-7">
+          <h2 id="heading1" class="featurette-heading page-section">Overview of React</h2>
+          <p>
+            React was created at Facebook and it is a UI Library that focuses on interactive, stateful and reusuable UI elements. React introduces the concept of 
+            the Virtual DOM. This renders only portions of the UI that are necessary to facilitate the action being performed.         
+          </p>     
+        </div>
+        <div class="col-md-5 circled_image img-circle">
+          <img class="pull-right featurette-image img-responsive center-circle" src="/images/react-logo.png" alt="ReactJS">
+          <p class="pull-right"><a href="#top" data-id="top" class="scroll-link">Back to top</a></p>
+        </div>        
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div id="react_concepts" class="row featurette">
+        
+        <div class="col-md-7 col-md-push-5">
+          <h2 class="featurette-heading page-section"><span class="text-muted">Core concepts:</span></h2>
+          <p class="lead">React concepts</p>
+          <p class="pull-right"><a href="#top" data-id="top" class="scroll-link">Back to top</a></p>
+        </div>
+
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div id="flux_section" class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading"><span class="text-muted">Flux</span></h2>
+          <p class="lead">
+            Flux capacitor
+          </p>
+        </div>
+        <div class="col-md-5 circled_image img-circle">
+          <img class="pull-right featurette-image img-responsive center-circle" src="/images/flux-workshop.png" alt="Flux">
+          <p class="pull-right"><a href="#top" data-id="top" class="scroll-link">Back to top</a></p>
+        </div> 
+      </div>
+
+      <hr class="featurette-divider">
+
+      <!-- /END THE FEATURETTES -->
+
+
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#top" data-id="top" class="scroll-link">Back to top</a></p>
+        <p>&copy; 2015 Daniel Weber</p>
+      </footer>
+
+    </div><!-- /.container -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> 
+
+<script type="text/javascript">
+$(document).ready(function() {
+	// navigation click actions	
+	$('.scroll-link').on('click', function(event){
+		event.preventDefault();
+		var sectionID = $(this).attr("data-id");
+		scrollToID('#' + sectionID, 750);
+	});
+	// scroll to top action
+	$('.scroll-top').on('click', function(event) {
+		event.preventDefault();
+		$('html, body').animate({scrollTop:0}, 'slow'); 		
+	});
+	// mobile nav toggle
+	$('#nav-toggle').on('click', function (event) {
+		event.preventDefault();
+		$('#main-nav').toggleClass("open");
+	});
+});
+// scroll function
+function scrollToID(id, speed){
+	var offSet = 50;
+	var targetOffset = $(id).offset().top - offSet;
+	var mainNav = $('#main-nav');
+	$('html,body').animate({scrollTop:targetOffset}, speed);
+	if (mainNav.hasClass("open")) {
+		mainNav.css("height", "1px").removeClass("in").addClass("collapse");
+		mainNav.removeClass("open");
+	}
+}
+if (typeof console === "undefined") {
+    console = {
+        log: function() { }
+    };
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>thedanielweber.com - ReactJS tutorial</title>
+    <script src="/js/jquery-1.11.0.min.js"></script>
+    	
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+   	
+    
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->  
+    
+    <!-- Custom styles for this template -->
+    <link href="/css/carousel.css" rel="stylesheet">      
+</head>
+<body>
+
+<style>
+.carousel-inner > .item > #img1 {
+	width: 551px !important;
+	height: 475px !important;
+}
+.col-lg-4 {
+    /*width: 25%;*/
+}
+
+.info_circle {
+  background:#337ab7;
+  color:white;
+  font-weight:bold;
+  font-size:20px;
+  border-radius:50%;
+}
+
+.carousel-inner > .item > #img1 {
+  min-width:0% !important;
+  height:auto !important;
+}
+
+.hover_btn {
+  width: 240px;
+  min-height:23px;
+  border-radius:2px;
+  border: solid #23527c 1px; 
+  cursor: pointer !important; 
+  text-align:center;
+  font-size:19px;
+  padding:5px;
+  display:block;
+}
+
+.hover_btn a {
+  text-decoration:none;
+}
+                     
+
+.hover_btn:hover, .hover_btn a:hover {
+  color: white;
+  transition: color 0.4s ease 0s;
+  background:#23527c;
+  text-decoration:none;  
+}
+
+.color_link_box2 {
+  border-radius: 0;
+  background-color: transparent;
+  transition: border-color 0.4s ease 0s, background-color 0.4s ease 0s;
+  border: solid rgba(232, 99, 78, 1) 1px;
+  cursor: pointer !important;
+}
+
+.color_link_box2 {
+  font: normal normal normal 17px/1.4em 'Josefin Slab',serif;
+  transition: color 0.4s ease 0s;
+  color: #E8634E;
+  display: inline-block;
+  margin: -webkit-calc(-1 * 1px) 1px 0;
+  margin: calc(-1 * 1px) 1px 0;
+  position: relative;
+  white-space: nowrap;
+}
+
+body {
+  background: #EBEBEB;
+}
+
+.marketing {
+  background: #FFF;
+  padding-top:15px;
+  border:1px solid #5A5A5A;
+  border-radius: 5px;
+}
+
+#react_concepts {
+  background:-webkit-linear-gradient(top,#337ab7 0,#fff 100%);
+}
+
+#react_overview, #flux_section {
+    background: transparent linear-gradient(#EAEBEB, #FFF) repeat scroll 0px 0px;
+}
+
+pre[class*=language-] {
+    background: #272822;
+}
+
+.container-fluid { padding-right:0 !important; padding-left:0 !important; }
+
+</style>
+
+
+  <div class="container-fluid">
+
+    <nav class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a id="top" class="navbar-brand" href="#">thedanielweber.com</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <!--
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            -->
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Projects <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/projects/jquery/smoke.html">jQuery Smoke</a></li>
+                <li><a href="/projects/react/">React.JS</a></li>
+                <li><a href="/projects/angularjs/">AngularJS Grocery Shopping App</a></li>
+                <li><a href="/projects/yeoman_angular/">Yeoman Created Angular App</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+  </div>
+
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+    	<div class="jumbotron">
+        <h1>An Introduction to ReactJs</h1>
+        <p>A brief overview of React</p>
+      </div>
+
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+        
+        <div class="col-lg-4">
+          <!--<div class="info_circle img-circle" style="width:140px; height:140px;">About Me</div>-->
+          <h2>Overview</h2>
+          <p>A brief overview of ReactJS.</p>
+          <p><a class="btn btn-default scroll-link" href="#react_overview" data-id="react_overview" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        
+        <div class="col-lg-4">
+          <h2>Advantages</h2>
+          <p>Why use React?</p>
+          <p><a class="btn btn-default scroll-link" href="#react_concepts" data-id="react_concepts" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+               
+        <div class="col-lg-4">
+          <h2>Getting Started</h2>
+          <p>How to begin using React</p>
+          <p><a class="btn btn-default scroll-link" href="#get_started_section" data-id="get_started_section" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        
+      </div><!-- /.row -->
+
+
+      <!-- START THE FEATURETTES -->
+
+      <hr class="featurette-divider">
+
+      <div id="react_overview" class="row featurette">
+        <div class="col-md-7">
+          <h1 id="heading1" class="featurette-heading page-section">Overview of React</h1>
+          <p>
+            React was created at Facebook and is a UI Library that focuses on interactive, stateful and reusuable elements. It shines when building large applications with data that changes over time.    
+          </p>     
+
+          <p>
+            React makes it easy to display data and also automatically updates the UI when the underlying data changes.
+          </p>
+
+        </div>
+        <div class="col-md-5 circled_image img-circle">
+          <img class="pull-right featurette-image img-responsive center-circle" src="/images/react-logo.png" alt="ReactJS">   
+          <p class="pull-right"><a href="#top" data-id="top" class="scroll-link">Back to top</a></p>       
+        </div>        
+      </div>
+
+
+      <hr class="featurette-divider">
+
+
+      <div id="react_concepts" class="row featurette">
+        
+        <div class="col-md-7 col-md-push-5">
+          <h1 class="page-section"><span class="text-muted">What it offers</span></h1>
+          <p class="lead">Reasons to use React</p>
+
+          <p>
+            It's simple. All you need to do is express how your app should look at any given point in time, and React automatically manages all UI updates when your underlying data changes.
+          </p>
+
+          <p>
+            React forces you to think in terms of reusable components (these are all you can create with react). This allows you to add and remove components much easier than other "frameworks". React is much more than another library, <b>it is a new way of thinking.</b>
+          </p>    
+
+          <p>
+            Has Virtual DOM, which allows for extremely fast rendering. Only renders portions of the DOM that were affected to get to a new state.
+          </p>              
+
+          <p>
+            Logo indicating why should I?
+          </p>
+
+          <p class="pull-right"><a href="#top" data-id="top" class="scroll-link">Back to top</a></p>
+        </div>
+        <div class="col-md-5 col-md-pull-7 circled_image img-circle">
+          <img class="pull-right featurette-image img-responsive center-circle" src="/images/shouldcare.jpg" alt="Care">
+        </div>           
+
+      </div>
+
+
+      <hr class="featurette-divider">
+
+
+      <!-- /END THE FEATURETTES -->
+
+      <div id="get_started_section" class="row featurette">
+        <div class="col-md-12">
+          <h1><span class="text-muted">Setting things up</span></h1>
+
+          <p>
+          When you set up your page, you need to include both react.js and JSXTransformer.js. You can then write your component in a script tag with type set to text/jsx:
+          </p>
+<pre>
+<code class="language-markup">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;script src="build/react.js"&gt;&lt;/script&gt;
+    &lt;script src="build/JSXTransformer.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="app-entry-point"&gt;&lt;/div&gt;
+    &lt;script type="text/jsx"&gt;
+      // React code will go here
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code>
+</pre>
+
+          <p>
+            Components connect to a dom element. In this instance, we can use the div with id of "app-entry-point" as it's entry point.
+          </p>
+
+        </div>
+      </div>
+
+
+      <hr class="featurette-divider">   
+
+
+      <div class="row featurette">
+        <div class="col-md-12">
+          <h1><span class="text-muted">Basic Concepts</span></h1>
+
+          <p>
+            The most basic elements in React are called components. Components are simply state-machines. React thinks of UIs as simple state machines. By thinking of a UI as being in various states and rendering those states, it's easy to keep your UI consistent.
+          </p>
+
+          <p>
+           An example follows:
+          </p>
+<pre>
+<code class="language-markup">
+&lt;script type="text/jsx"&gt;
+    /** @jsx React.DOM */
+    React.render(
+        &lt;h1&gt;Hello, world!&lt;/h1&gt;,
+        document.getElementById('app-entry-point')
+    );
+&lt;/script&gt;
+</code>
+</pre>
+
+          <p>
+            Components connect to a dom element. In this instance, we can use the div with id of "app-entry-point" as it's entry point.
+          </p>
+
+          <p>
+            Every component has a state object and a props object. State is set using the setState method. Calling setState triggers UI updates and is the bread and butter of React’s interactivity.
+          </p>
+
+<pre>
+<code class="language-markup">
+&lt;script type="text/jsx"&gt;
+    /** @jsx React.DOM */
+    var CounterComponent = React.createClass({
+        getInitialState: function(){
+            return {
+                count: 5
+            }
+        },
+        render: function(){
+            return (
+                &lt;h1&gt;{this.state.count}&lt;/h1&gt;
+            )
+        }
+    });
+&lt;/script&gt;
+</code>
+</pre>          
+
+          <p>
+            The scripting language shown is called JSX and is a Javascript XML syntax transform.
+          </p>
+
+          <b>Events</b>
+
+          <p>
+          React has an events system. The events are attached as properties of components and can trigger methods. To build off the example above, let's increment the count on click:
+          </p>
+
+<pre>
+<code class="language-markup">
+&lt;script type="text/jsx"&gt;
+/** @jsx React.DOM */
+
+var Counter = React.createClass({
+  incrementCount: function(){
+    this.setState({
+      count: this.state.count + 1
+    });
+  },
+  getInitialState: function(){
+     return {
+       count: 0
+     }
+  },
+  render: function(){
+    return (
+      &lt;div class="my-component"&gt;
+        &lt;h1&gt;Count: {this.state.count}&lt;/h1&gt;
+        &lt;button type="button" onClick={this.incrementCount}>Increment&lt;/button&gt;
+      &lt;/div&gt;
+    );
+  }
+});
+
+React.render(&lt;Counter/&gt;, document.getElementById('entry-point'));
+
+&lt;/script&gt;
+</code>
+</pre>        
+
+<style>
+
+.counter {
+  width: 100%;
+  margin: auto;
+  background: #0066ff;
+  border-radius: 5px;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+.counter h1 {
+  margin: 0;
+  padding: 20px;
+  font-size: 36px;
+}
+.counter button {
+  background: #f1c40f;
+  border: 0;
+  box-shadow: 0px 5px 0px #927608;
+  padding: 20px;
+  width: 100%;
+  outline: none;
+  border-radius: 5px;
+  color: #703688;
+  font-weight: bold;
+}
+
+.counter button:hover {
+  background: #a9890a;
+}
+
+</style>
+<br>
+Actual React app:
+<br><br>
+<div id="count_app"></div>
+
+<script type="text/jsx">
+/** @jsx React.DOM */
+
+var Counter = React.createClass({
+  incrementCount: function(){
+    this.setState({
+      count: this.state.count + 1
+    });
+  },
+  getInitialState: function(){
+     return {
+       count: 0
+     }
+  },
+  render: function(){
+    return (
+      <div className="counter">
+        <h1>{this.state.count} clicks</h1>
+        <button type="button" onClick={this.incrementCount}>Increment</button>
+      </div>
+    );
+  }
+});
+
+React.renderComponent(<Counter/>, document.getElementById('count_app'));
+    </script>          
+
+
+        </div>
+      </div>
+
+      <hr class="featurette-divider">  
+
+      <div class="row featurette">
+        <div class="col-md-12">
+          <h1><span class="text-muted">Using Components</span></h1>
+
+          <p>
+            When you use the render function, the first argument is the component we want to render, and the second is the DOM node it should be connected to. Use the createClass method to create custom component classes. That takes an object of specifications as an argument as demonstrated below:
+          </p>
+<pre>
+<code class="language-markup">
+var TestComponent = React.createClass({
+    render: function(){
+        return (
+            &lt;h1&gt;Hello, world!&lt;/h1&gt;
+        );
+    }
+});
+
+// Now, we can render this component
+React.render(
+    &lt;TestComponent/&gt;,
+    document.getElementById('someDiv')
+);
+</code>
+</pre>
+
+          <p>
+            When you create a component class with React.createClass(), provide a specification object that contains a render method. Additionally, you can contain other lifecycle methods described here.
+          </p>
+
+<pre>
+<code class="language-markup">
+var TestComponent = React.createClass({
+    render: function(){
+        return (
+            &lt;h1&gt;Hey {this.props.name}!&lt;/h1&gt;
+        );
+    }
+});
+
+React.render(&lt;TestComponent name="Genius" /&gt;, document.getElementById('someDiv'));
+</code>
+</pre>      
+
+          <p>
+            React.createClass() also contains other <a href="http://facebook.github.io/react/docs/component-specs.html#lifecycle-methods" target="_blank">Lifecycle Methods</a>:.
+          </p>    
+
+          <ul>
+          <li><b>Mounting: componentWillMount</b> - Invoked once, both on the client and server, immediately before the initial rendering occurs.</li>
+          <li><b>Mounting: componentDidMount</b> - Invoked once, only on the client, immediately after the initial rendering occurs.</li>
+          <li><b>Updating: componentWillReceiveProps</b> - Invoked when a component is receiving new props. This method is not called for the initial render.</li>
+          <li><b>Updating: shouldComponentUpdate</b> - Invoked before rendering when new props or state are being received. This method is not called for the initial render or when forceUpdate is used.</li>
+          <li><b>Updating: componentWillUpdate</b> - Invoked immediately before rendering when new props or state are being received. This method is not called for the initial render.</li>
+          <li><b>Updating: componentDidUpdate</b> - Invoked immediately after the component's updates are flushed to the DOM. This method is not called for the initial render.</li>
+          <li><b>Unmounting: componentWillUnmount</b> - Invoked immediately before a component is unmounted from the DOM.</li>
+          </ul>     
+
+          <p>It also contains several <a href="http://facebook.github.io/react/docs/component-specs.html#component-specifications" target="_blank">specs</a> (other than render):</p>
+
+          <ul>
+            <li><b>getInitialState</b> - Invoked once before the component is mounted. The return value will be used as the initial value of this.state.</li>
+            <li><b>getDefaultProps</b> - Invoked once and cached when the class is created. Values in the mapping will be set on this.props if that prop is not specified by the parent component (i.e. using an in check).</li>
+            <li><b>propTypes</b> - The propTypes object allows you to validate props being passed to your components.</li>
+            <li><b>mixins</b> - The mixins array allows you to use mixins to share behavior among multiple components.</li>
+            <li><b>statics</b> - The statics object allows you to define static methods that can be called on the component class.</li>
+          </ul>
+
+          <h2>States</h2>
+
+          <p>
+            In React, you simply update a component's state, and then render a new UI based on this new state. React takes care of updating the DOM for you in the most efficient way. Read more about components and states <a href="http://facebook.github.io/react/docs/interactivity-and-dynamic-uis.html#components-are-just-state-machines" target="_blank">here</a>.
+          </p>
+
+        </div>
+      </div>
+
+
+      <hr class="featurette-divider">   
+
+
+      <div class="row featurette">
+        <div class="col-md-12">
+          <h1><span class="text-muted">Composability</span></h1>
+
+          <p>
+            Since react promotes you to think of your UI in terms of pieces of functionality (components), you will obviously need <a href="http://facebook.github.io/react/docs/multiple-components.html" target="_blank">multiple components</a>.
+          </p>
+
+          <p>
+           Composition demonstrated:
+          </p>
+<pre>
+<code class="language-markup">
+var UserProfile = React.createClass({
+  render: function() {
+    return (
+      &lt;div&gt;
+        &lt;UserPic username={this.props.username} /&gt;
+        &lt;UserLink username={this.props.username} /&gt;
+      &lt;/div&gt;
+    );
+  }
+});
+
+var UserPic = React.createClass({
+  render: function() {
+    return (
+      &lt;img src={'https://graph.mysite.com/' + this.props.username + '/picture'} /&gt;
+    );
+  }
+});
+
+var UserLink = React.createClass({
+  render: function() {
+    return (
+      &lt;a href={'https://www.mysite.com/' + this.props.username}&gt;
+        {this.props.username}
+      &lt;/a&gt;
+    );
+  }
+});
+
+ReactDOM.render(
+  &lt;UserProfile username="sample user name" /&gt;,
+  document.getElementById('entry-point')
+);
+</code>
+</pre>
+
+          <p>
+            The component "UserProfile" contains (owns) 2 sub components, a "UserPic" and a "UserLink".
+          </p>        
+
+        </div>
+      </div>
+
+
+      <hr class="featurette-divider">      
+
+
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#top" data-id="top" class="scroll-link">Back to top</a></p>
+        <p>&copy; 2015 Daniel Weber</p>
+      </footer>
+
+    </div>
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.11.1/react.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.11.0/JSXTransformer.js"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> 
+
+<script type="text/javascript">
+$(document).ready(function() {
+	// navigation click actions	
+	$('.scroll-link').on('click', function(event){
+		event.preventDefault();
+		var sectionID = $(this).attr("data-id");
+		scrollToID('#' + sectionID, 750);
+	});
+	// scroll to top action
+	$('.scroll-top').on('click', function(event) {
+		event.preventDefault();
+		$('html, body').animate({scrollTop:0}, 'slow'); 		
+	});
+	// mobile nav toggle
+	$('#nav-toggle').on('click', function (event) {
+		event.preventDefault();
+		$('#main-nav').toggleClass("open");
+	});
+});
+// scroll function
+function scrollToID(id, speed){
+	var offSet = 50;
+	var targetOffset = $(id).offset().top - offSet;
+	var mainNav = $('#main-nav');
+	$('html,body').animate({scrollTop:targetOffset}, speed);
+	if (mainNav.hasClass("open")) {
+		mainNav.css("height", "1px").removeClass("in").addClass("collapse");
+		mainNav.removeClass("open");
+	}
+}
+if (typeof console === "undefined") {
+    console = {
+        log: function() { }
+    };
+}
+</script>
+</body>
+</html>
