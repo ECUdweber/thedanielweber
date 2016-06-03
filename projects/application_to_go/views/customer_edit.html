@@ -1,0 +1,105 @@
+<div class="section_header">Manage Customer</div>
+
+<div class="customer_details_container search_box_form">
+
+	<form ng-submit="saveCustomer(customer_edit_form.$valid)" name="customer_edit_form" novalidate class="form-inline">
+		<!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+
+
+				  <!-- Columns start at 100% wide on mobile and bump up to 33.3% wide on desktop -->
+				  <!--
+				  <div class="form-group col-xs-12 col-md-4">
+				    <input type="text" class="form-control" id="firstName" ng-model="customersSearch.firstName" name="firstName" placeholder="First Name">
+				  </div>
+
+				  <div class="form-group col-xs-12 col-md-4">
+				    <input type="text" class="form-control" id="lastName" name="lastName" ng-model="customersSearch.lastName" placeholder="Last Name">
+				  </div>	
+				-->
+
+		<div class="row form-name-group">
+			<!-- Columns start at 100% wide on mobile and bump up to 25% wide on desktop -->		
+			<div class="form-group col-xs-12 col-md-3" ng-class="{ 'has-error': (customer_edit_form.firstName.$touched && customer_edit_form.firstName.$invalid) || (saveClicked && customer_edit_form.firstName.$invalid)  }">
+				<label ng-class="{ 'error-font: (customer_edit_form.firstName.$touched && customer_edit_form.firstName.$invalid) || (customer_edit_form.$submitted && customer_edit_form.firstName.$invalid)' }">First Name&nbsp;<span class="danger" ng-show="(customer_edit_form.firstName.$touched && customer_edit_form.firstName.$invalid) || (customer_edit_form.$submitted && customer_edit_form.firstName.$invalid)">*</span></label>
+				
+				<input type="text" name="firstName" class="form-control" ng-class="{ 'error-border: (customer_edit_form.firstName.$touched && customer_edit_form.firstName.$invalid) || (customer_edit_form.$submitted && customer_edit_form.firstName.$invalid)' }" placeholder="First Name" ng-model="customer.firstName" required>
+
+			    <div class="help-block danger" ng-show="(customer_edit_form.firstName.$touched && customer_edit_form.firstName.$invalid) || (customer_edit_form.$submitted && customer_edit_form.firstName.$invalid)">
+			        <p>Field is required</p>
+			    </div>	
+			</div>		
+
+			<div class="form-group col-xs-12 col-md-3">
+			    <label>Middle Name</label><br>
+			    <input type="text" class="form-control" placeholder="Middle Name" ng-model="customer.middleName">
+			</div>
+
+			<div class="form-group col-xs-12 col-md-3">
+			    <label>Last Name</label><br>
+			    <input type="text" class="form-control" placeholder="Last Name" ng-model="customer.lastName">
+			</div>				
+
+			<div class="form-group col-xs-12 col-md-3">
+				<label>Nick Name</label><br>
+				<input type="text" class="form-control" placeholder="Nick Name" ng-model="customer.nickName">
+			</div>
+	  	</div>
+
+		<div class="row">
+			<!-- Columns start at 100% wide on mobile and bump up to 25% wide on desktop -->		
+			<div class="form-group col-xs-12 col-md-3">
+				<label>Gender</label><br>
+
+				<div class="dropdown">
+				  <button class="btn btn-default dropdown-toggle" type="button" id="genderDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				    <div class="dropdown-text">{{customer.gender}}</div>
+				    <div class="caret"></div>
+				  </button>
+				  <ul class="dropdown-menu" data-ng-model="customer.gender" data-ng-change="getTitleDropdownOptions()" aria-labelledby="genderDrop">
+					<li ng-repeat="option in genderDropdown">
+					  <a ng-click="getTitleDropdownOptions(option, $index)">
+					    {{option}}
+					  </a>
+					</li>
+				  </ul>
+				</div>			    
+			</div>
+
+			<div class="form-group col-xs-12 col-md-3">
+
+				<label>Title</label><br>
+
+				<div class="dropdown">
+				  <button class="btn btn-default dropdown-toggle" type="button" id="titleDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				    <div class="dropdown-text">{{customer.title}}</div>
+				    <div class="caret"></div>
+				  </button>
+				  <ul class="dropdown-menu" data-ng-model="customer.title" aria-labelledby="titleDrop">
+					<li ng-repeat="option in titleDropdown">
+					  <a ng-click="$parent.customer.title = option">
+					    {{option}}
+					  </a>
+					</li>
+				  </ul>
+				</div>			    
+			</div>
+
+			<div class="form-group col-xs-12 col-md-3">
+			    <label>SSN</label><br>
+			    <input class="form-control ssn" type='text' ssn-input ng-model="customer.ssn" placeholder="  ___-__-____" title="SSN (Format: 999-99-9999)" />
+			</div>		
+
+	  	</div>	
+
+	  	<div class="row customer_detail_buttons_container">
+	  		<div class="form-group col-xs-12 col-md-12 btn-group">
+	  			<button type="submit" class="btn btn-primary">Save Customer</button>
+	  			<a ng-href="#/customers" class="btn btn-default">Back to Search</a>
+	  		</div>
+	  	</div>  	
+	
+	</form>
+
+</div>
+
+<br>
