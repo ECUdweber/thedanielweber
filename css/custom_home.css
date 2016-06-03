@@ -169,6 +169,31 @@ a.img-class:hover{
 
 .restful-apis { margin-top: 40px; margin-bottom: 40px; }
 
+.link_box {
+    background: #fff;
+    max-width: 200px;
+    text-align: center;
+    overflow: hidden;
+    font-weight: bold;
+}
+
+.link_box img {
+    height: 200px;
+    width: 100%;
+    border-radius: 10px;
+    max-width: 200px;
+    overflow: hidden;
+    background: blue;
+}
+
+.section-playground .link_box {
+    background: #e3e3e3;
+}
+
+.section-playground img.calc-box {
+    background: #000;
+}
+
 @media (min-width: 768px) { 
     .section-header .content {
          top: 200px;
