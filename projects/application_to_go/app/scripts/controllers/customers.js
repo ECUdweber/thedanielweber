@@ -112,7 +112,7 @@ angular.module('applicationToGoApp')
         enableFiltering: true,
     	useExternalSorting: false,
 		columnDefs: [
-			{ field: 'actions', sortable: false, width: '5%', displayName: 'Actions', cellTemplate: removeTemplate},
+			{ field: 'actions', sortable: false, width: '5%', displayName: 'Actions', enableFiltering: false, cellTemplate: removeTemplate},
 			{ field: 'firstName', displayName: 'First name'},
 			{ field: 'lastName', displayName: 'Last name'},
             { field: 'nickName', displayName: 'Nickname'},
