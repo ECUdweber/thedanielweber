@@ -15,7 +15,7 @@ angular.module('applicationToGoApp').service('modalService', ['$modal',
             backdrop: true,
             keyboard: true,
             modalFade: true,
-            templateUrl: '/templates/modal.html'
+            templateUrl: './templates/modal.html'
         };
 
         var modalOptions = {

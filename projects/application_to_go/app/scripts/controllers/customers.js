@@ -40,18 +40,20 @@ angular.module('applicationToGoApp')
 		$scope.customersData.splice(index, 1);
     };
 
-	$scope.deleteCustomer = function (row) {
+	$scope.deleteCustomer = function (customer) {
+
+        console.log("Requested to delete customer: ", customer);
 
         var modalOptions = {
             closeButtonText: 'No',
             actionButtonText: 'Yes',
             headerText: 'Confirmation',
-            bodyText: 'Are you sure you want to delete?'
+            bodyText: 'Are you sure you want to delete? ' + customer.lastName
         };
 
         modalService.showModal({}, modalOptions).then(function (result) {
        
-	        customersFactory.delete({id: row.entity.id}, function(data) {
+	        customersFactory.delete({id: customer.id}, function(data) {
 	            $scope.refresh();
 	        });			                
 
@@ -59,7 +61,7 @@ angular.module('applicationToGoApp')
        
 	};    
 
-	var removeTemplate = '<div class="customer_action_cell"><div class="edit_div"><a ng-href="#/customers/{{row.entity.id}}" class="glyphicon glyphicon-pencil edit_customer_cell">&nbsp;</a></div>&nbsp;<div class="glyphicon glyphicon-trash edit_customer_cell" ng-click="grid.appScope.deleteCustomer(row);">&nbsp;</div></div>';		
+	var removeTemplate = '<div class="customer_action_cell"><div class="edit_div"><a ng-href="#/customers/{{row.entity.id}}" class="glyphicon glyphicon-pencil edit_customer_cell">&nbsp;</a></div>&nbsp;<div class="glyphicon glyphicon-trash edit_customer_cell" ng-click="grid.appScope.deleteCustomer({{row.entity}});">&nbsp;</div></div>';		
 
     $scope.customersGridOptions = { 
     	useExternalPagination: false,
