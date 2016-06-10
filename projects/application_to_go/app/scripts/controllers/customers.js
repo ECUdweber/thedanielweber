@@ -8,7 +8,7 @@
  * Controller of the applicationToGoApp
  */
 angular.module('applicationToGoApp')
-  .controller('CustomersCtrl', function ($scope, $http, $firebaseArray, customersFactory, uiGridConstants, modalService) {
+  .controller('CustomersCtrl', function ($scope, $http, customersFactory, uiGridConstants, modalService) {
 
     this.awesomeThings = [
       'HTML5 Boilerplate',
@@ -20,22 +20,6 @@ angular.module('applicationToGoApp')
     	"firstName": "",
     	"lastName": ""
 	};          
-
-    var ref = new Firebase("https://app-to-go.firebaseio.com");
-    // download the data into a local object
-    $scope.customersData = $firebaseArray(ref);
-    
-
-    // this waits for the data to load and then logs the output. Therefore,
-    // data from the server will now appear in the logged output. Use this with care!
-    $scope.customersData.$loaded()
-      .then(function() {
-        console.log($scope.customersData);
-      })
-      .catch(function(err) {
-        console.error(err);
-      });
-
 
     $scope.searchCustomers = function () {
         console.log("Searching customers.");
@@ -75,37 +59,7 @@ angular.module('applicationToGoApp')
        
 	};    
 
-	var removeTemplate = '<div class="customer_action_cell"><div class="edit_div"><a ng-href="#/customers/{{row.entity.id}}" class="glyphicon glyphicon-pencil edit_customer_cell">&nbsp;</a></div>&nbsp;<div class="glyphicon glyphicon-trash edit_customer_cell" ng-click="grid.appScope.deleteCustomer(row);">&nbsp;</div></div>';	
-
-
-    $scope.pagination = {
-        pageSize: 10,
-        pageNumber: 1,
-        itemsPerPage: 10,
-        totalItems: 0,
-        getTotalPages: function () {
-            return Math.ceil(this.totalItems / this.pageSize);
-        },
-        nextPage: function () {
-            if (this.pageNumber < this.getTotalPages()) {
-                this.pageNumber++;
-                $scope.load();
-            }
-        },
-        previousPage: function () {
-            if (this.pageNumber > 1) {
-                this.pageNumber--;
-                $scope.load();
-            }
-        }
-    };  	
-
-	//called when navigate to another page in the pagination
-	$scope.selectPage = function () {
-		var page = $scope.pagination.pageNumber;
-	    $scope.pagination.pageNumber = page;
-		$scope.refresh();
-	};
+	var removeTemplate = '<div class="customer_action_cell"><div class="edit_div"><a ng-href="#/customers/{{row.entity.id}}" class="glyphicon glyphicon-pencil edit_customer_cell">&nbsp;</a></div>&nbsp;<div class="glyphicon glyphicon-trash edit_customer_cell" ng-click="grid.appScope.deleteCustomer(row);">&nbsp;</div></div>';		
 
     $scope.customersGridOptions = { 
     	useExternalPagination: false,
@@ -123,24 +77,8 @@ angular.module('applicationToGoApp')
     }; 
 
 	$scope.refresh = function () {
-
-		$http.get("/api/customers/", {
-		//customersFactory.query(), {	    
-	    	params: { page: $scope.pagination.pageNumber, itemsPerPage: $scope.pagination.itemsPerPage }
-	    })
-	    .success(function (data) {
-			$scope.customersData = data.customers;
-			$scope.pagination.totalItems = data.totalItems;
-	    });
-
+        $scope.customersData = customersFactory.all();
 	};
 
-    $scope.getDataFromFirebase = function () {
-        console.log("Getting data from firebase.");
-        $scope.customersData = $firebaseObject(ref);
-    };    
-
-    //$scope.getDataFromFirebase();
-
-	//$scope.refresh(); 
+	$scope.refresh(); 
   });
