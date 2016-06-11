@@ -25,10 +25,25 @@ angular.module('applicationToGoApp')
 	          return customers.$add(item);
 	        },
 	        get: function (itemId) {
-	          return $firebase(ref.child('items').child(itemId)).$asObject();
+	        	//console.log("Getting customer with id of: ", itemId);
+
+	        	var customerById = $filter('filter')(customers, {id: itemId })[0];
+	        	//console.log("object_by_id: ", customerById);
+
+	        	return customerById;
 	        },
 			update: function (itemId, item) {
-			  return ref.child('items').child(itemId).set(item);
+				console.log("Will update item: ", item);
+
+				var customer = $filter('filter')(customers, function (d) {return d.id === item.id;})[0];
+
+				//list[2].foo = "bar";
+
+				customers.$save(customer).then(function(ref) {
+				  ref.key() === customer.id; // true
+				});				
+
+				return;
 			},	        
 	        delete: function (item) {
 				var customer = $filter('filter')(customers, function (d) {return d.id === item.id;})[0];

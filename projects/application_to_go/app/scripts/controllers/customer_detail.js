@@ -16,7 +16,7 @@ var titleDropdownOptions = [
 ];  
 
 angular.module('applicationToGoApp')
-  .controller('CustomerDetailCtrl', function ($scope, $location, $routeParams, $firebaseArray, customersFactory) {
+  .controller('CustomerDetailCtrl', function ($scope, $location, $routeParams, customersFactory) {
     
     this.awesomeThings = [
       'HTML5 Boilerplate',
@@ -58,28 +58,22 @@ angular.module('applicationToGoApp')
 
     };
 
-  
-    var ref = new Firebase("https://app-to-go.firebaseio.com");
-    // download the data into a local object
-    $scope.customersData = $firebaseArray(ref);
+    $scope.setCurrentCustomer = function () {
+      $scope.customer = customersFactory.get($scope.customerId);
 
-    $scope.customersData.$loaded()
+      /*
       .then(function() {
-        // loop through customers and get current id
-        angular.forEach($scope.customersData, function(object, key){
-          if(object.id == $scope.customerId) {
-              $scope.customer = object;
-          }
-        });
+        if($scope.customer.gender === "") {
+          $scope.customer.gender = "Choose a gender";      
+        }
 
-        if($scope.customer.gender === "")
-        $scope.customer.gender = "Choose a gender";      
+        if(!$scope.customer.title) {
+          $scope.customer.title = "Choose gender to get options"; 
+        }     
+      }); 
+      */
+    }; 
 
-        if(!$scope.customer.title)
-        $scope.customer.title = "Choose gender to get options";        
-      })
-      .catch(function(err) {
-        console.error(err);
-      });     
+    $scope.setCurrentCustomer();   
 
   });
