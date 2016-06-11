@@ -52,26 +52,13 @@ angular.module('applicationToGoApp')
 
         if (isValid) {
 			      customersFactory.update({id: $scope.customerId}, $scope.customer);
-            alert("UPDATE SENT! Should I redirect to customer search page or show a dialog of sorts?");
-			     //$location.path("#/customers");	                  
+            //alert("UPDATE SENT! Should I redirect to customer search page or show a dialog of sorts?");           
         }	
 
     };
 
     $scope.setCurrentCustomer = function () {
       $scope.customer = customersFactory.get($scope.customerId);
-
-      /*
-      .then(function() {
-        if($scope.customer.gender === "") {
-          $scope.customer.gender = "Choose a gender";      
-        }
-
-        if(!$scope.customer.title) {
-          $scope.customer.title = "Choose gender to get options"; 
-        }     
-      }); 
-      */
     }; 
 
     $scope.setCurrentCustomer();   
