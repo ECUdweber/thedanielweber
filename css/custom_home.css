@@ -186,6 +186,10 @@ a.img-class:hover{
     background: blue;
 }
 
+.center-content {
+    margin: 0px auto;
+}
+
 .section-playground .link_box {
     margin: 0px auto;
     background: #e3e3e3;
