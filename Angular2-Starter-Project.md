@@ -110,4 +110,4 @@ In section 2, SystemJS is used to load our application and our various modules. 
 
 This is all that is required to get our simple application running. <a href="http://plnkr.co/edit/GJaYIPWlgENEEKWFqr4r" target="_blank">Here is a link to a plunker</a> that contains our working application. You can fork it into your own version and change whatever you'd like.
 
-<a href="http://plnkr.co/edit/GJaYIPWlgENEEKWFqr4r" target="_blank">VIEW APP</a>
+<a target="_blank" href="http://plnkr.co/edit/GJaYIPWlgENEEKWFqr4r">VIEW APP</a>
