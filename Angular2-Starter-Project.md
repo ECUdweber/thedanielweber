@@ -122,7 +122,7 @@ Now let's add a bit more functionality to our program. We will create a counter 
 Our increment component will be its own module so that we can reuse it in later applications. 
 
 Let's name our file: app/increment-clicker.component.ts and set it up.
-`
+```
 // app/increment-clicker.component.ts
 import { Component } from '@angular/core'; 
 
@@ -130,8 +130,8 @@ import { Component } from '@angular/core';
     selector: 'increment-clicker',
     template: `
       <div className="counter">
-        <h1>{curClicks}} clicks</h1>
-        <button type="button" (click)="doSomething()">Increment</button>
+        <h1>{{curClicks}} clicks</h1>
+        <button type="button" (click)="incrementClicks()">Increment</button>
       </div>
     `
 })
@@ -140,7 +140,47 @@ export class IncrementClicker {
   curClicks = 0;
   
   incrementClicks() {
-    curClicks++;
+    this.curClicks++;
   }  
 }
-`
+```
+
+
+We also need to update our AppComponent to include our new component:
+```
+// app/app.component.ts
+import { Component } from '@angular/core';
+
+/** Nested Component */ 
+import { IncrementClicker } from 'app/increment-clicker.component';
+
+@Component({
+  selector: 'my-app',
+  directives: [IncrementClicker],
+  template: `
+    <h1>Free Code Camp Rocks!</h1>
+    <increment-clicker></increment-clicker>
+  `,
+  styles: [`
+    h1 { color: darkgreen; font-family: Arial, Helvetica, sans-serif;}
+  `]  
+})
+
+export class AppComponent { }
+```
+To pull in our new IncrementClicker component we need to import it by including the classname as well as the location of the typescript file as we did on this line:
+```
+import { IncrementClicker } from 'app/increment-clicker.component';
+```
+We then add the directives to our AppComponent using:
+```
+directives: [IncrementClicker],
+```
+Finally, we just add the tag that our component connects to in the template:
+```
+  template: `
+    <h1>Free Code Camp Rocks!</h1>
+    <increment-clicker></increment-clicker>
+  `,
+```  
+Our component is now included in our app!
