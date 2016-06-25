@@ -83,13 +83,13 @@ We then call **bootstrap** function with our AppComponent
         <title>Free Code Camp - Angular 2 Tutorial</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="styles/styles.css">
+        <link rel="stylesheet" href="styles.css">
         <!-- 1. Load libraries -->
-        <!-- Polyfills for older browsers -->
-        <script src="node_modules/core-js/client/shim.min.js"></script>
-        <script src="node_modules/zone.js/dist/zone.js"></script>
-        <script src="node_modules/reflect-metadata/Reflect.js"></script>
-        <script src="node_modules/systemjs/dist/system.src.js"></script>
+        <script src="https://npmcdn.com/core-js/client/shim.min.js"></script>
+
+        <script src="https://npmcdn.com/zone.js@0.6.12?main=browser"></script>
+        <script src="https://npmcdn.com/reflect-metadata@0.1.3"></script>
+        <script src="https://npmcdn.com/systemjs@0.19.27/dist/system.src.js"></script>
         
         <!-- 2. Configure SystemJS -->
         <script src="systemjs.config.js"></script>
@@ -98,9 +98,16 @@ We then call **bootstrap** function with our AppComponent
         </script>
       </head>
       
-      <!-- 3. Display app in my-app element -->
+      <!-- Display app in my-app element -->
       <body>
         <my-app>Loading Your App...</my-app>
       </body>
     </html>
 ```
+In commented section 1, we loaded several libraries that improve the compatibility of this tutorial with different browsers/versions. It also imports system.src.js which is used below.
+
+In section 2, SystemJS is used to load our application and our various modules. In a production example we may want to use something else such as webpack. It was chosen here since we can use it with plunker.
+
+This is all that is required to get our simple application running. [Here is a link to a plunker](http://plnkr.co/edit/GJaYIPWlgENEEKWFqr4r "FCC Angular2 App") that contains our working application. You can fork it into your own version and change whatever you'd like.
+
+[VIEW APP](http://plnkr.co/edit/GJaYIPWlgENEEKWFqr4r "FCC Angular2 App")
