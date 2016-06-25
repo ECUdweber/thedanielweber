@@ -1,6 +1,6 @@
 # Angular 2 Starter Project
 
-This tutorial will build an extremely simple seed project with Angular2. We will begin with the most basic application possible followed by an example that is a bit more functional.
+This tutorial will build an extremely simple seed project with Angular2. We will begin with the most basic application possible and then add on a bit more functionality.
 
 ### Overview 
 
@@ -10,13 +10,13 @@ Angular interprets these modules and uses them to present your application in th
 
 ### Starter Application
 
-Let's get started with a minimal application. We will begin with an application that contains a single module whose sole job is to display some text.
+Let's get started with a minimal application. We will begin with an application that contains a single module whose only job is to display some text.
 
-We will begin by creating a new folder called "app"
+We will begin by creating a new folder called "app".
 ```
 mkdir app
 ```
-As mentioned above, our application will begin with a single module or **component** that will display some text to the screen. Let's learn how to create a component using TypeScript. 
+As mentioned above, our application will begin with a single module, or **component**, that will display some text to the screen. Let's learn how to create a component using TypeScript. 
 
 Create a file called app.component.ts as shown below which will be the starting point of our app:
 ```
@@ -67,7 +67,7 @@ If we want to build a more complex component we can add logic and properties to 
 
 We export our class so we can use it in other modules in our application.
 
-We need to connect our root component to Angular and to do so we create another file in our app folder called main.ts that will have the following code:
+Next, we need to connect our root component to Angular. To do this we create another file in our app folder called main.ts that will have the following code:
 ```
     import { bootstrap }    from '@angular/platform-browser-dynamic';
     import { AppComponent } from './app.component';
@@ -115,7 +115,7 @@ This is all that is required to get our simple application running. <a href="htt
 
 <a target="_blank" href="http://plnkr.co/edit/2i7Wjwd2JGj4NZtKvGD2">VIEW APP</a>
 
-## Add Functionality and Multiple Components
+## Add Functionality and Another Component
 
 Now let's add a bit more functionality to our program. We will create a counter that let's you increment it by clicking a button.
 
@@ -176,18 +176,18 @@ export class IncrementClicker {
   }  
 }
 ```
-Our component structure is similar to our previous one, but we've added a bit of functionality here. You will notice our class is no longer empty. We have added a variable to track the clicks as well as a function to increment them when the user clicks the button.
+Our component structure is similar to our previous one, but we've added a bit of functionality here. You will notice our class is no longer empty. We've added a variable to track the clicks as well as a function to increment them when the user clicks the button.
 
 You can display variables from your class in your template using double brackets such as: {{variableName}}
 
-We bind the button click to our class function using Angulars Event Bindings.:
+We bind the button click to our class function using Angulars Event Bindings.
 ```
 <button type="button" (click)="incrementClicks()">Increment</button>
 ```
 
 Notice that we've also added some styling to our components. This way everything is self-contained in this module. If you include it elsewhere you won't have to worry about adding the style rules to a master css file, etc.
 
-We also need to update our AppComponent to include our new component:
+Now we just need to update our AppComponent to include our new component:
 ```
 // app/app.component.ts
 import { Component } from '@angular/core';
@@ -217,7 +217,7 @@ We then add the directives to our AppComponent using:
 ```
 directives: [IncrementClicker],
 ```
-Finally, we just add the tag that our component connects to in the template:
+Finally, we just add the tag that our component connects to in the template. So the selector in our IncrementClicker component will match the tag where we want it to show up.
 ```
   template: `
     <h1>Free Code Camp Rocks!</h1>
