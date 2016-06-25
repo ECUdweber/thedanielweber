@@ -133,7 +133,39 @@ import { Component } from '@angular/core';
         <h1>{{curClicks}} clicks</h1>
         <button type="button" (click)="incrementClicks()">Increment</button>
       </div>
-    `
+    `,
+    styles: [`
+        .counter {
+          width: 100%;
+          margin: auto;
+          background: darkgreen;
+          border-radius: 5px;
+          color: white;
+          padding: 20px;
+          text-align: center;
+        }
+        .counter h1 {
+          margin: 0;
+          padding: 20px;
+          font-size: 36px;
+        }
+        .counter button {
+          background: #f1c40f;
+          border: 0;
+          box-shadow: 0px 5px 0px #927608;
+          padding: 20px;
+          width: 100%;
+          outline: none;
+          border-radius: 5px;
+          color: darkgreen;
+          font-weight: bold;
+        }
+        
+        .counter button:hover {
+          background: #a9890a;
+          cursor: pointer;
+        }
+    `]
 })
 
 export class IncrementClicker {
@@ -144,7 +176,16 @@ export class IncrementClicker {
   }  
 }
 ```
+Our component structure is similar to our previous one, but we've added a bit of functionality here. You will notice our class is no longer empty. We have added a variable to track the clicks as well as a function to increment them when the user clicks the button.
 
+You can display variables from your class in your template using double brackets such as: {{variableName}}
+
+We bind the button click to our class function using Angulars Event Bindings.:
+```
+<button type="button" (click)="incrementClicks()">Increment</button>
+```
+
+Notice that we've also added some styling to our components. This way everything is self-contained in this module. If you include it elsewhere you won't have to worry about adding the style rules to a master css file, etc.
 
 We also need to update our AppComponent to include our new component:
 ```
@@ -184,3 +225,5 @@ Finally, we just add the tag that our component connects to in the template:
   `,
 ```  
 Our component is now included in our app!
+<a target="_blank" href="http://plnkr.co/edit/BdvNONEmO3Jwg0EavX22">Updated Code</a>
+<a target="_blank" href="http://run.plnkr.co/plunks/BdvNONEmO3Jwg0EavX22/">VIEW COMPLETE APPLICATION</a>
