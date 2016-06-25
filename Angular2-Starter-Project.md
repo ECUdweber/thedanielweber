@@ -33,3 +33,27 @@ Our component demonstrates the basic structure of any component you will ever wr
 * **import statements** to pull in other components we will need
 * **component decorator** which lets angular know which template to use and how the component will be created
 * **component class** which controls the components appearance and behavior
+
+Let's take a closer look at each line in our component.
+
+***Import***
+```
+import { Component } from '@angular/core';
+```
+Since angular applications are modular, we can import any other modules or libraries we may need. Here, we are importing the Angular 2 core module to give our component access to the @Component decorator. Every app will need this import to get started.
+
+Since we imported the ***Component*** function above, we can now use it to associate metadata with our component class that will tell Angular how our component should be created and the actions it will provide.
+
+***Component decorator***
+```
+    @Component({
+      selector: 'my-app',
+      template: '<h1>Free Code Camp Rocks!</h1>'
+    })
+```    
+Our metadata object has selector and template fields.
+* The ***selector*** specifies a CSS selector that indicates which HTML element will represent this component. The element we will use will be named "my-app". Angular will use this to create an instance of our component where it finds this element.
+* The ***template*** tells angular what template it will use for this component. This can refer to other Components or just a form of HTML that tells how to display the view for our component. Our template is just displaying an h1 element containing the text "Free Code Camp Rocks!".
+
+***Component Class***
+Our final line provides an empty class named ***AppComponent***
