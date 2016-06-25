@@ -62,4 +62,15 @@ export class AppComponent { }
 ```
 If we want to build a more complex component we can add logic and properties to the class. This component is extremely basic and simply displays some html, so its class will remain empty.
 
-We export our class so we can use it in other modules in our application, which we need to do now.
+We export our class so we can use it in other modules in our application.
+
+We need to connect our root component to Angular and to do so we create another file in our app folder called main.ts that will have the following code:
+```
+    import { bootstrap }    from '@angular/platform-browser-dynamic';
+    import { AppComponent } from './app.component';
+    bootstrap(AppComponent);
+```
+This file imports the two items we need to start our app.
+1. ***bootstrap*** - Angulars built in function that connects to the browser 
+2. ***AppComponent*** - Our component we created above (which is why we exported it)
+We then call **bootstrap** function with our AppComponent
