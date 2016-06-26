@@ -6,10 +6,6 @@ This tutorial will build an extremely simple seed project with Angular2. We will
 
 Angular 2 applications are built by creating HTML templates that contain angular specific markup. Classes are then created to manage the templates and everything is wrapped into a module, which you piece together to create your application. These modules are referred to as **components**. Angular interprets these modules and uses them to present your application in the browser.
 
-We can use both pure JavaScript or TypeScript to make an angular 2 app. Using TypeScript, it is easier and more programmer friendly :wink:
-
-Let's learn how to create a component using TypeScript.
-
 ## Starter Application
 
 Let's get started with a minimal application. We will begin with an application that contains a single module whose only job is to display some text.
@@ -18,7 +14,9 @@ We will begin by creating a new folder called "app".
 ```
 mkdir app
 ```
-As mentioned above, our application will begin with a single module, or **component**, that will display some text to the screen. Let's learn how to create a component using TypeScript. 
+As mentioned above, our application will begin with a single module, or **component**, that will display some text to the screen. We can use both pure JavaScript or TypeScript to make an angular 2 app. Using TypeScript, it is easier and more programmer friendly :wink:
+
+Let's learn how to create a component using TypeScript.
 
 Create a file called *`app.component.ts`* as shown:
 ```
