@@ -4,7 +4,9 @@ This tutorial will build an extremely simple seed project with Angular2. We will
 
 ## Overview 
 
-Angular 2 applications are built by creating HTML templates that contain angular specific markup. Classes are then created to manage the templates and everything is wrapped into a module, which you piece together to create your application. These modules are referred to as **components**. Angular interprets these modules and uses them to present your application in the browser.
+Angular 2 applications are built by creating HTML templates that contain angular specific markup. Classes are then created to manage the templates and everything is wrapped into a module, which you piece together to create your application. These modules are referred to as **components**. 
+
+Angular interprets these modules and uses them to present your application in the browser.
 
 ## Starter Application
 
@@ -20,6 +22,8 @@ Let's learn how to create a component using TypeScript.
 
 Create a file called *`app.component.ts`* as shown:
 ```
+    // app.component.ts
+    
     import { Component } from '@angular/core';
     @Component({
       selector: 'my-app',
@@ -121,7 +125,7 @@ Now let's add a bit more functionality to our program. We will create a counter 
 
 Our increment component will be its own module so that we can reuse it in later applications. 
 
-Let's name our file: `app/increment-clicker.component.ts` set it up.
+Let's name our file: `app/increment-clicker.component.ts` and set it up.
 ```
 // app/increment-clicker.component.ts
 import { Component } from '@angular/core'; 
