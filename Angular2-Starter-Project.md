@@ -76,9 +76,9 @@ Next, we need to connect our root component to Angular. To do this we create ano
     bootstrap(AppComponent);
 ```
 This file imports the two items we need to start our app.
-* ***bootstrap*** - Angulars built in function that connects to the browser 
-* ***AppComponent*** - Our component we created above (which is why we exported it)
-We then call **bootstrap** function with our AppComponent
+* **`bootstrap`** - Angular's built in method that connects to the browser 
+* **`AppComponent`** - Our component we created above (which is why we exported it)
+We then call `bootstrap` method with `AppComponent`
 
 **Finally, create index.html**
 
@@ -109,7 +109,7 @@ We then call **bootstrap** function with our AppComponent
       </body>
     </html>
 ```
-In commented section 1, we loaded several libraries that improve the compatibility of this tutorial with different browsers/versions. It also imports system.src.js which is used below.
+In commented section 1, we loaded several libraries that improve the compatibility of this tutorial with different browsers/versions. It also imports `system.src.js` which is used as module loader to import the app.
 
 In section 2, SystemJS is used to load our application and our various modules. In a production example we may want to use something else such as webpack. It was chosen here since we can use it with plunker.
 
