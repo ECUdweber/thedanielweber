@@ -214,11 +214,11 @@ To pull in our new `IncrementClicker` component we need to import it by includin
 ```
 import { IncrementClicker } from 'app/increment-clicker.component';
 ```
-We then add the directives to our AppComponent using:
+We then add the `IncrementClicker` *component* as a directive to the `AppComponent` module using:
 ```
 directives: [IncrementClicker],
 ```
-Finally, we just add the tag that our component connects to in the template. So the selector in our IncrementClicker component will match the tag where we want it to show up.
+Finally, we just add the tag that our component connects to in the template. So the selector in our `IncrementClicker` component will match the tag where we want it to show up.
 ```
   template: `
     <h1>Free Code Camp Rocks!</h1>
