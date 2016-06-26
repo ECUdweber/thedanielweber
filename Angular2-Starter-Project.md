@@ -121,7 +121,7 @@ Now let's add a bit more functionality to our program. We will create a counter 
 
 Our increment component will be its own module so that we can reuse it in later applications. 
 
-Let's name our file: app/increment-clicker.component.ts and set it up.
+Let's name our file: `app/increment-clicker.component.ts` set it up.
 ```
 // app/increment-clicker.component.ts
 import { Component } from '@angular/core'; 
@@ -178,9 +178,9 @@ export class IncrementClicker {
 ```
 Our component structure is similar to our previous one, but we've added a bit of functionality here. You will notice our class is no longer empty. We've added a variable to track the clicks as well as a function to increment them when the user clicks the button.
 
-You can display variables from your class in your template using double brackets such as: {{variableName}}
+You can display properties from your class in your template using double braces such as: `{{ variableName }}`
 
-We bind the button click to our class function using Angulars Event Bindings.
+We bind the button click event to our class function using Angulars Event Bindings.
 ```
 <button type="button" (click)="incrementClicks()">Increment</button>
 ```
