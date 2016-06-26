@@ -187,13 +187,11 @@ We bind the button click event to our class function using Angulars Event Bindin
 
 Notice that we've also added some styling to our components. This way everything is self-contained in this module. If you include it elsewhere you won't have to worry about adding the style rules to a master css file, etc.
 
-Now we just need to update our AppComponent to include our new component:
+Now we just need to update our `AppComponent` to include our new component:
 ```
 // app/app.component.ts
 
 import { Component } from '@angular/core';
-
-/** Nested Component */ 
 import { IncrementClicker } from 'app/increment-clicker.component';
 
 @Component({
