@@ -192,6 +192,8 @@ Now we just need to update our `AppComponent` to include our new component:
 // app/app.component.ts
 
 import { Component } from '@angular/core';
+
+/* Nested Component */
 import { IncrementClicker } from 'app/increment-clicker.component';
 
 @Component({
@@ -208,7 +210,7 @@ import { IncrementClicker } from 'app/increment-clicker.component';
 
 export class AppComponent { }
 ```
-To pull in our new IncrementClicker component we need to import it by including the classname as well as the location of the typescript file as we did on this line:
+To pull in our new `IncrementClicker` component we need to import it by including the class name as well as the location of the typescript file as we did on this line:
 ```
 import { IncrementClicker } from 'app/increment-clicker.component';
 ```
