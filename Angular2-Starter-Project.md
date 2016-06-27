@@ -13,7 +13,7 @@ Angular interprets these modules and uses them to present your application in th
 Let's get started with a minimal application. We will begin with an application that contains a single module whose only job is to display some text.
 
 We will begin by creating a new folder called "app".
-```sh
+``` sh
 $ mkdir app
 ```
 As mentioned above, our application will begin with a single module, or **component**, that will display some text to the screen. We can use both pure JavaScript or TypeScript to make an angular 2 app. Using TypeScript, it is easier and more programmer friendly :wink:
@@ -21,7 +21,7 @@ As mentioned above, our application will begin with a single module, or **compon
 Let's learn how to create a component using TypeScript.
 
 Create a file called *`app.component.ts`* as shown:
-```js
+``` js
     // app.component.ts
     
     import { Component } from '@angular/core';
@@ -44,7 +44,7 @@ Our component demonstrates the basic structure of any component you will ever wr
 Let's take a closer look at each line in our component.
 
 ##Import
-```
+```js
 import { Component } from '@angular/core';
 ```
 Since angular applications are modular, we can import any other modules or libraries we may need. Here, we are importing the Angular 2 core module to give our component access to the `@Component` decorator. Every app will need this import to get started.
@@ -52,7 +52,7 @@ Since angular applications are modular, we can import any other modules or libra
 Since we imported the `Component` function above, we can now use it to associate metadata with our component class that will tell Angular how our component should be created and the actions it will provide.
 
 ## Component decorator
-```
+``` js
     @Component({
       selector: 'my-app',
       template: '<h1>Free Code Camp Rocks!</h1>'
@@ -64,7 +64,7 @@ Our metadata object has selector and template fields.
 
 ## Component Class
 Our final line provides an empty class named ***AppComponent***
-```
+``` js
 export class AppComponent { }
 ```
 If we want to build a more complex component we can add logic and properties to the class. This component is extremely basic and simply displays some html, so its class will remain empty.
@@ -72,7 +72,7 @@ If we want to build a more complex component we can add logic and properties to 
 We export our class so we can use it in other components in our application.
 
 Next, we need to connect our root component to Angular. To do this we create another file in our app folder called *`main.ts`* that will have the following code:
-```
+``` js
     import { bootstrap }    from '@angular/platform-browser-dynamic';
     import { AppComponent } from './app.component';
     bootstrap(AppComponent);
@@ -126,7 +126,7 @@ Now let's add a bit more functionality to our program. We will create a counter 
 Our increment component will be its own module so that we can reuse it in later applications. 
 
 Let's name our file: `app/increment-clicker.component.ts` and set it up.
-```
+``` js
 // app/increment-clicker.component.ts
 import { Component } from '@angular/core'; 
 
@@ -185,14 +185,14 @@ Our component structure is similar to our previous one, but we've added a bit of
 You can display properties from your class in your template using double braces such as: `{{ variableName }}`
 
 We bind the button click event to our class function using Angulars Event Bindings.
-```
+``` 
 <button type="button" (click)="incrementClicks()">Increment</button>
 ```
 
 Notice that we've also added some styling to our components. This way everything is self-contained in this module. You may also include a `templateUrl` and/or `styleUrls` properties instead to extract the template and style rules to an external file and link them here.
 
 Now we just need to update our `AppComponent` to include our new component:
-```
+``` js
 // app/app.component.ts
 
 import { Component } from '@angular/core';
@@ -215,15 +215,15 @@ import { IncrementClicker } from 'app/increment-clicker.component';
 export class AppComponent { }
 ```
 To pull in our new `IncrementClicker` component we need to import it by including the class name as well as the location of the typescript file as we did on this line:
-```
+``` js
 import { IncrementClicker } from 'app/increment-clicker.component';
 ```
 We then add the `IncrementClicker` *component* as a directive to the `AppComponent` module using:
-```
+``` js
 directives: [IncrementClicker],
 ```
 Finally, we just add the tag that our component connects to in the template. So the selector in our `IncrementClicker` component will match the tag where we want it to show up.
-```
+``` js
   template: `
     <h1>Free Code Camp Rocks!</h1>
     <increment-clicker></increment-clicker>
