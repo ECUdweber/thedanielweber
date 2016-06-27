@@ -13,15 +13,15 @@ Angular interprets these modules and uses them to present your application in th
 Let's get started with a minimal application. We will begin with an application that contains a single module whose only job is to display some text.
 
 We will begin by creating a new folder called "app".
-```
-mkdir app
+```sh
+$ mkdir app
 ```
 As mentioned above, our application will begin with a single module, or **component**, that will display some text to the screen. We can use both pure JavaScript or TypeScript to make an angular 2 app. Using TypeScript, it is easier and more programmer friendly :wink:
 
 Let's learn how to create a component using TypeScript.
 
 Create a file called *`app.component.ts`* as shown:
-```
+```js
     // app.component.ts
     
     import { Component } from '@angular/core';
