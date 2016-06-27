@@ -84,7 +84,7 @@ We then call `bootstrap` method with `AppComponent`
 
 **Finally, create index.html**
 
-```
+``` html
     <html>
       <head>
         <title>Free Code Camp - Angular 2 Tutorial</title>
@@ -185,7 +185,7 @@ Our component structure is similar to our previous one, but we've added a bit of
 You can display properties from your class in your template using double braces such as: `{{ variableName }}`
 
 We bind the button click event to our class function using Angulars Event Bindings.
-``` 
+``` html
 <button type="button" (click)="incrementClicks()">Increment</button>
 ```
 
