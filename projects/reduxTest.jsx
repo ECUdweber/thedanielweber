@@ -61,8 +61,8 @@ notifier.success = notifier.spawn({addnCls: 'humane-jackedup-success'});
 
 /****************************** REDUX code ***********************************/
 // REDUX Bound Action Creators
-function damage(entity, value) {
-  store.dispatch({type: 'DAMAGE', entityName: entity, value: value});
+function inflictDamage(entity, value) {
+  store.dispatch({type: 'INFLICT_DAMAGE', entityName: entity, value: value});
 }
 function heal(entity, health) {
   store.dispatch({type: 'HEAL', entityName: entity, value: health});
@@ -131,15 +131,15 @@ const initialState = {
       y: 0,
       health: 100,
       inventory: {},
-      weapon: 'stick',
-      attack: 7,
+      weapon: 'fists',
+      attack: 10,
       level: 0,
       toNextLevel: 60
     }
   },
   // Link occupied space with entity id
-  occupiedSpaces: {
-    '0x0': 'player'
+  filledTiles: {
+    '0-0': 'player'
   },
   map: [],
   level: 0,
@@ -151,7 +151,7 @@ const initialState = {
 // REDUX Reducer
 function rogueLikeReducer(state = initialState, action) {
   switch (action.type) {
-    case 'DAMAGE':
+    case 'INFLICT_DAMAGE':
       return {
         ...state,
         entities: {
@@ -188,11 +188,11 @@ function rogueLikeReducer(state = initialState, action) {
     case 'MOVE':
       return {
         ...state,
-        occupiedSpaces: _.chain(state.occupiedSpaces)
+        filledTiles: _.chain(state.filledTiles)
                           .omit(`${state.entities[action.entityName]
-                            .x}x${state.entities[action.entityName].y}`)
+                            .x}-${state.entities[action.entityName].y}`)
                           .set(`${state.entities[action.entityName].x +
-                            action.vector.x}x${state.entities[action.entityName]
+                            action.vector.x}-${state.entities[action.entityName]
                               .y + action.vector.y}`,
                             action.entityName)
                           .value(),
@@ -208,9 +208,9 @@ function rogueLikeReducer(state = initialState, action) {
     case 'SET_LOCATION':
       return {
         ...state,
-        occupiedSpaces: _.chain(state.occupiedSpaces)
+        filledTiles: _.chain(state.filledTiles)
                           .omit(`${state.entities[action.entityName]
-                            .x}x${state.entities[action.entityName].y}`)
+                            .x}-${state.entities[action.entityName].y}`)
                           .set(`${action.location.x}x${action.location.y}`,
                             action.entityName)
                           .value(),
@@ -226,9 +226,9 @@ function rogueLikeReducer(state = initialState, action) {
     case 'ADD_ENTITY':
       return {
         ...state,
-        occupiedSpaces: {
-          ...state.occupiedSpaces,
-          [`${action.location.x}x${action.location.y}`]: action.entityName
+        filledTiles: {
+          ...state.filledTiles,
+          [`${action.location.x}-${action.location.y}`]: action.entityName
         },
         entities: {
           ...state.entities,
@@ -244,9 +244,9 @@ function rogueLikeReducer(state = initialState, action) {
     case 'REMOVE_ENTITY':
       return {
         ...state,
-        occupiedSpaces: _.chain(state.occupiedSpaces)
+        filledTiles: _.chain(state.filledTiles)
                           .omit(`${state.entities[action.entityName]
-                            .x}x${state.entities[action.entityName].y}`)
+                            .x}-${state.entities[action.entityName].y}`)
                           .value(),
         entities: _.chain(state.entities)
                     .omit(action.entityName)
@@ -258,8 +258,8 @@ function rogueLikeReducer(state = initialState, action) {
         entities: {
           'player': state.entities.player
         },
-        occupiedSpaces: {
-          [`${state.entities.player.x}x${state.entities.player.y}`]: 'player'
+        filledTiles: {
+          [`${state.entities.player.x}-${state.entities.player.y}`]: 'player'
         }
       };
     case 'SET_MAP':
@@ -316,12 +316,12 @@ function rogueLikeReducer(state = initialState, action) {
     case 'ADD_BOSS':
       return {
         ...state,
-        occupiedSpaces: {
-          ...state.occupiedSpaces,
-          [`${action.location.x}x${action.location.y}`]: 'boss',
-          [`${action.location.x + 1}x${action.location.y}`]: 'boss',
-          [`${action.location.x}x${action.location.y + 1}`]: 'boss',
-          [`${action.location.x + 1}x${action.location.y + 1}`]: 'boss'
+        filledTiles: {
+          ...state.filledTiles,
+          [`${action.location.x}-${action.location.y}`]: 'boss',
+          [`${action.location.x + 1}-${action.location.y}`]: 'boss',
+          [`${action.location.x}-${action.location.y + 1}`]: 'boss',
+          [`${action.location.x + 1}-${action.location.y + 1}`]: 'boss'
         },
         entities: {
           ...state.entities,
@@ -384,7 +384,7 @@ const RogueLike = React.createClass({
       player: state.entities.player,
       entities: state.entities,
       map: state.map,
-      occupiedSpaces: state.occupiedSpaces,
+      filledTiles: state.filledTiles,
       level: state.level,
       windowHeight: state.windowHeight,
       windowWidth: state.windowWidth,
@@ -403,12 +403,12 @@ const RogueLike = React.createClass({
     setWindowSize();
   },
   _getEmptyCoords: function() {
-    const {map, occupiedSpaces} = this.props.getState();
+    const {map, filledTiles} = this.props.getState();
     let coords, x, y;
     do {
       x = Math.floor(Math.random() * map.length);
       y = Math.floor(Math.random() * map[0].length);
-      if (map[x][y] === tileType.FLOOR && !occupiedSpaces[x + 'x' + y]) {
+      if (map[x][y] === tileType.FLOOR && !filledTiles[x + '-' + y]) {
         coords = {x: x, y: y};
       }
     } while (!coords);
@@ -500,7 +500,7 @@ const RogueLike = React.createClass({
         newCoords.y < map[0].length &&
         map[newCoords.x][newCoords.y] !== tileType.WALL) {
       // Tile is not a wall, determine if it contains an entity
-      const entityName = state.occupiedSpaces[newCoords.x + 'x' + newCoords.y];
+      const entityName = state.filledTiles[newCoords.x + '-' + newCoords.y];
       // move and return if empty
       if (!entityName) {
         move('player', vector);
@@ -525,8 +525,8 @@ const RogueLike = React.createClass({
               this._setupGame();
               return;
             }
-            damage(entityName,playerAttack);
-            damage('player',enemyAttack);
+            inflictDamage(entityName,playerAttack);
+            inflictDamage('player',enemyAttack);
           } else {
             // Is the enemy a boss?
             if (entityName === 'boss') {
@@ -557,14 +557,14 @@ const RogueLike = React.createClass({
   },
 
   render: function() {
-    const {map, entities, occupiedSpaces, level, player, windowHeight,
+    const {map, entities, filledTiles, level, player, windowHeight,
            windowWidth, winner, darkness} = this.state,
           SIGHT = 7,
           // This should match the css height and width in pixels
           tileSize = document.getElementsByClassName('tile').item(0) ? document.getElementsByClassName('tile').item(0).clientHeight : 10;
     
     // Get start coords for current viewport
-    const numCols = Math.floor((windowWidth / tileSize) - 5),
+    const numCols = Math.floor((windowWidth / tileSize)),
           numRows = Math.floor((windowHeight/ tileSize) - 17);
     let startX = Math.floor(player.x - (numCols/2));
     let startY = Math.floor(player.y - (numRows/2));
@@ -589,7 +589,7 @@ const RogueLike = React.createClass({
     for (let y = startY; y < endY; y++) {
       row = [];
       for (let x = startX; x < endX; x++) {
-        let entity = occupiedSpaces[`${x}x${y}`];
+        let entity = filledTiles[`${x}-${y}`];
         if (!entity) {
           tileClass = reverseLookup[map[x][y]];
         } else {
@@ -605,7 +605,7 @@ const RogueLike = React.createClass({
             tileClass += ' dark';
           }
         }
-        row.push(React.createElement('span', {className: 'tile ' + tileClass, key: x + 'x' + y}, ' '));
+        row.push(React.createElement('div', {className: 'tile ' + tileClass, key: x + '-' + y}, ' '));
       }
       rows.push(React.createElement('div', {className: 'boardRow', key: 'row' + y}, row))
     }
