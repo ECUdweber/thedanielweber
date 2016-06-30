@@ -1,12 +1,3 @@
-'use strict';
-
-// This codebase uses react and redux and heavily utilizes certain ES2015
-// features like spread operators, destructuring, const, let, and
-// arrow functions.
-// I'd highly recommend looking into them if any of these technologies are
-// unfamiliar
-
-// Game constants
 const ATTACK_VARIANCE = 7;
 
 const tileType = {
@@ -376,12 +367,6 @@ const RogueLike = React.createClass({
     this._storeDataChanged();
     this.unsubscribe = store.subscribe(this._storeDataChanged);
     window.addEventListener('keydown', this._handleKeypress);
-    window.addEventListener('resize', setWindowSize);
-    // Setup touch controls
-    const touchElement = document.getElementById('root');
-    const hammertime = new Hammer(touchElement);
-    hammertime.get('swipe').set({direction: Hammer.DIRECTION_ALL});
-    hammertime.on('swipe', this._handleSwipe);
   },
   componentWillUnmount: function() {
     this.unsubscribe();
@@ -626,15 +611,23 @@ const RogueLike = React.createClass({
     }
 
     return (
-      <div id = 'game'>
-        <ul id = 'ui'>
-          <li id = 'health'><span className = 'label'>Health:</span> {player.health}</li>
-          <li id = 'weapon'><span className = 'label'>Weapon:</span> {player.weapon}</li>
-          <li id = 'attack'><span className = 'label'>Attack:</span> {player.attack}</li>
-          <li id = 'playerLevel'><span className = 'label'>Level:</span> {player.level}</li>
-          <li id = 'xp'><span className = 'label'>Next Level:</span> {player.toNextLevel} XP</li>
-          <li id = 'level'><span className = 'label'>Dungeon:</span> {level}</li>
-        </ul>
+      <div id='game'>
+          <div className="gamestatus-header row">
+            <div className="col-md-2 text-center">Health:</div>
+            <div className="col-md-2 text-center">Current Weapon:</div>
+            <div className="col-md-2 text-center">Attack Strength:</div>
+            <div className="col-md-2 text-center">Level:</div>
+            <div className="col-md-2 text-center">Current XP:</div>
+            <div className="col-md-2 text-center">XP To Next Level:</div>            
+          </div>
+          <div className="gamestatus row">
+            <div className="col-md-2 text-center">{player.health}</div>
+            <div className="col-md-2 text-center">{player.weapon}</div>
+            <div className="col-md-2 text-center">{player.attack}</div>
+            <div className="col-md-2 text-center">400 XP</div>
+            <div className="col-md-2 text-center">100</div>           
+          </div>  
+
         <div className = 'buttons'>
           <ToggleButton
             label = 'Toggle Darkness'
@@ -666,12 +659,8 @@ const ToggleButton = React.createClass({
   }
 });
 
-// Render React to page
-const targetEl = document.getElementById('root');
-
-React.render(
-    <RogueLike mapAlgo={createMap} getState={store.getState}/>,
-  targetEl
+ReactDOM.render(
+  <RogueLike mapAlgo={createMap} getState={store.getState}/>, document.getElementById("game-container")
 );
 
 // MAP GENERATOR
