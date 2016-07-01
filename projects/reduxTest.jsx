@@ -1,4 +1,18 @@
-const ATTACK_VARIANCE = 7;
+const glyphIcons = {
+  player: 'glyphicon-user',
+  enemy: 'glyphicon-asterisk',
+  health: 'glyphicon-heart',
+  weapon: 'glyphicon-wrench',
+  exit: 'glyphicon-modal-window'
+}
+
+const boardPieceTypes = {
+  wall: 0,
+  enemy: 1,
+  weapon: 2,
+  health: 3,
+  potion: 4
+};
 
 const tileType = {
   WALL: 0,
@@ -7,36 +21,36 @@ const tileType = {
 
 const reverseLookup = ['WALL', 'FLOOR'];
 
-const weaponTypes = [
+const weapons = [
   {
-    entityName: 'brass knuckles',
+    entityName: 'Staff',
     entityType: 'weapon',
     health: 0,
-    attack: 7
+    attack: 10
   },
   {
-    entityName: 'serrated dagger',
+    entityName: 'Hammer',
     entityType: 'weapon',
     health: 0,
-    attack: 12
+    attack: 15
   },
   {
-    entityName: 'katana',
+    entityName: 'Hanzo Sword',
     entityType: 'weapon',
     health: 0,
-    attack: 16
+    attack: 20
   },
   {
-    entityName: 'reaper\'s scythe',
-    entityType: 'weapon',
-    health: 0,
-    attack: 22
-  },
-  {
-    entityName: 'large trout',
+    entityName: 'Blades of Chaos',
     entityType: 'weapon',
     health: 0,
     attack: 30
+  },
+  {
+    entityName: 'Dragon Spear',
+    entityType: 'weapon',
+    health: 0,
+    attack: 50
   }
 ];
 
@@ -54,13 +68,26 @@ const PLAYER = {
   toNextLevel: 60
 };
 
-// Setup humane toast notifiers
-var notifier = humane.create({baseCls: 'humane-jackedup', timeout: 5000});
-notifier.error = notifier.spawn({addnCls: 'humane-jackedup-error'});
-notifier.success = notifier.spawn({addnCls: 'humane-jackedup-success'});
+// Damage needs to be somewhat random within a range per specs.
+const DAMAGE_RANGE = 5;
+
+// function that handles messages to our user.
+function showGameMessage(status, message) {
+  alert("NEED SOMETHING TO SHOW MESSAGES.\nStatus: " + status + "\nMessage: " + message);
+}
 
 /****************************** REDUX code ***********************************/
 // REDUX Bound Action Creators
+function setMap(map) {
+  store.dispatch({type: 'SET_MAP', map: map});
+}
+function resetMap(map) {
+  store.dispatch({type: 'RESET_MAP', map: map});
+}
+function addActor(entityName, entityType, health, attack, location) {
+  store.dispatch({type: 'ADD_ACTOR', entityName: entityName, entityType: entityType, health: health, attack: attack, location: location});
+}
+
 function inflictDamage(entity, value) {
   store.dispatch({type: 'INFLICT_DAMAGE', entityName: entity, value: value});
 }
@@ -76,18 +103,11 @@ function setLocation(entity, location) {
 function switchWeapon(weaponName, attack) {
   store.dispatch({type: 'SWITCH_WEAPON', weapon: weaponName, attack: attack});
 }
-function addEntity(entityName, entityType, health, attack, location) {
-  store.dispatch({type: 'ADD_ENTITY', entityName: entityName, entityType: entityType,
-    health: health, attack: attack, location: location});
-}
 function removeEntity(entityName) {
   store.dispatch({type: 'REMOVE_ENTITY', entityName: entityName});
 }
 function resetBoard() {
   store.dispatch({type: 'RESET_BOARD'});
-}
-function setMap(map) {
-  store.dispatch({type: 'SET_MAP', map: map});
 }
 function increaseLevel() {
   store.dispatch({type: 'INCREASE_LEVEL'});
@@ -110,9 +130,6 @@ function levelUp(attack, health, xp) {
     health: health,
     toNextLevel: xp
   });
-}
-function resetMap(map) {
-  store.dispatch({type: 'RESET_MAP', map: map});
 }
 function addBoss(attack, health, coords) {
   store.dispatch({type: 'ADD_BOSS', attack: attack, health: health, location: coords});
@@ -148,9 +165,39 @@ const initialState = {
   darkness: true
 };
 
-// REDUX Reducer
-function rogueLikeReducer(state = initialState, action) {
+// Redux Reducers
+function gameReduxReducers(state = initialState, action) {
+  // * We will use the ES6 spread operator to copy in attributes "..."
+  // * omit is from underscore. It return copy of object, filtered to omit the blacklisted keys. 
+  //   Alternatively accepts a predicate indicating which keys to omit.
+
+  // Each of these is just returning a new state the program should be in. It copies all state attributes using spread
+  //   and then just alters the values desired.
   switch (action.type) {
+    case 'SET_MAP':
+      return {
+        ...state,
+        map: action.map
+      };    
+    case 'ADD_ACTOR':
+      return {
+        ...state,
+        filledTiles: {
+          ...state.filledTiles,
+          [`${action.location.x}-${action.location.y}`]: action.entityName
+        },
+        entities: {
+          ...state.entities,
+          [action.entityName]: {
+            entityType: action.entityType,
+            health: action.health,
+            attack: action.attack,
+            x: action.location.x,
+            y: action.location.y
+          }
+        }
+      };
+
     case 'INFLICT_DAMAGE':
       return {
         ...state,
@@ -189,12 +236,9 @@ function rogueLikeReducer(state = initialState, action) {
       return {
         ...state,
         filledTiles: _.chain(state.filledTiles)
-                          .omit(`${state.entities[action.entityName]
-                            .x}-${state.entities[action.entityName].y}`)
-                          .set(`${state.entities[action.entityName].x +
-                            action.vector.x}-${state.entities[action.entityName]
-                              .y + action.vector.y}`,
-                            action.entityName)
+                          .omit(`${state.entities[action.entityName].x}-${state.entities[action.entityName].y}`)
+                          .set(`${state.entities[action.entityName].x + action.vector.x}-${state.entities[action.entityName].y + 
+                            action.vector.y}`,action.entityName)
                           .value(),
         entities: {
           ...state.entities,
@@ -209,10 +253,8 @@ function rogueLikeReducer(state = initialState, action) {
       return {
         ...state,
         filledTiles: _.chain(state.filledTiles)
-                          .omit(`${state.entities[action.entityName]
-                            .x}-${state.entities[action.entityName].y}`)
-                          .set(`${action.location.x}x${action.location.y}`,
-                            action.entityName)
+                          .omit(`${state.entities[action.entityName].x}-${state.entities[action.entityName].y}`)
+                          .set(`${action.location.x}-${action.location.y}`, action.entityName)
                           .value(),
         entities: {
           ...state.entities,
@@ -223,30 +265,11 @@ function rogueLikeReducer(state = initialState, action) {
           }
         }
       };
-    case 'ADD_ENTITY':
-      return {
-        ...state,
-        filledTiles: {
-          ...state.filledTiles,
-          [`${action.location.x}-${action.location.y}`]: action.entityName
-        },
-        entities: {
-          ...state.entities,
-          [action.entityName]: {
-            entityType: action.entityType,
-            health: action.health,
-            attack: action.attack,
-            x: action.location.x,
-            y: action.location.y
-          }
-        }
-      };
     case 'REMOVE_ENTITY':
       return {
         ...state,
         filledTiles: _.chain(state.filledTiles)
-                          .omit(`${state.entities[action.entityName]
-                            .x}-${state.entities[action.entityName].y}`)
+                          .omit(`${state.entities[action.entityName].x}-${state.entities[action.entityName].y}`)
                           .value(),
         entities: _.chain(state.entities)
                     .omit(action.entityName)
@@ -261,11 +284,6 @@ function rogueLikeReducer(state = initialState, action) {
         filledTiles: {
           [`${state.entities.player.x}-${state.entities.player.y}`]: 'player'
         }
-      };
-    case 'SET_MAP':
-      return {
-        ...state,
-        map: action.map
       };
     case 'INCREASE_LEVEL':
       return {
@@ -345,16 +363,15 @@ function rogueLikeReducer(state = initialState, action) {
   return state;
 }
 
-// REDUX Store
-let store = Redux.createStore(rogueLikeReducer);
+// REDUX Store for game data
+let store = Redux.createStore(gameReduxReducers);
 
-// REACT UI
-const RogueLike = React.createClass({
-
+// Game Component
+const DragonSlayer = React.createClass({
   propTypes: {
     // This is the algorithm for creating the map.
     // Must be a function that ouputs a matrix of 0 (wall) and 1 (floor) tiles
-    mapAlgo: React.PropTypes.func.isRequired,
+    mapFunc: React.PropTypes.func.isRequired,
     getState: React.PropTypes.func.isRequired
   },
   getInitialState: function() {
@@ -397,7 +414,7 @@ const RogueLike = React.createClass({
               (currLevel + 1) * PLAYER.toNextLevel);
   },
   _setupGame: function() {
-    resetMap(this.props.mapAlgo());
+    resetMap(this.props.mapFunc());
     this._fillMap()
     this._storeDataChanged();
     setWindowSize();
@@ -417,21 +434,23 @@ const RogueLike = React.createClass({
   _fillMap: function() {
     // Place player
     setLocation('player', this._getEmptyCoords());
+
     // Place items
     const state = this.props.getState();
-    const weapon = weaponTypes[state.level];
-    addEntity(weapon.entityName, 'weapon', weapon.health, weapon.attack, this._getEmptyCoords());
-    // Place heath and enemies
-    const NUM_THINGS = 5,
+    const weapon = weapons[state.level];
+    addActor(weapon.entityName, 'weapon', weapon.health, weapon.attack, this._getEmptyCoords());
+
+    // Place health and enemies
+    const NUM_THINGS = 7,
           HEALTH_VAL = 20,
-          LEVEL_MULT = state.level + 1;
+          LEVEL_MULTIPLIER = state.level + 1;
+
     for (let i = 0; i < NUM_THINGS; i++) {
-      addEntity('health'+i, 'health', HEALTH_VAL, 0, this._getEmptyCoords());
-      addEntity('enemy'+i, 'enemy', LEVEL_MULT * ENEMY.health,
-        LEVEL_MULT * ENEMY.attack, this._getEmptyCoords());
+      addActor('health'+i, 'health', HEALTH_VAL, 0, this._getEmptyCoords());
+      addActor('enemy'+i, 'enemy', LEVEL_MULTIPLIER * ENEMY.health, LEVEL_MULTIPLIER * ENEMY.attack, this._getEmptyCoords());
     }
     // Place exit if not last level
-    if (state.level < 4) addEntity('exit', 'exit', 0, 0, this._getEmptyCoords());
+    if (state.level < 4) addActor('exit', 'exit', 0, 0, this._getEmptyCoords());
     // Place boss on last (fifth) level
     if (state.level === 4) addBoss(125, 500, this._getEmptyCoords());
   },
@@ -465,32 +484,6 @@ const RogueLike = React.createClass({
       this._handleMove(vector);
     }
   },
-  _handleSwipe: function(e) {
-    let vector;
-    const {overallVelocity, angle} = e;
-    if (Math.abs(overallVelocity) > .75) {
-      // swipe up
-      if (angle > -100 && angle < -80) {
-        vector = {x: 0, y: -1};
-      }
-      // swipe right
-      if (angle > -10 && angle < 10) {
-        vector = {x: 1, y: 0};
-      }
-      // swipe down
-      if (angle > 80 && angle < 100) {
-        vector = {x: 0, y: 1};
-      }
-      // swipe left
-      if (Math.abs(angle) > 170) {
-        vector = {x: -1, y: 0};
-      }
-    }
-    if (vector) {
-      e.preventDefault();
-      this._handleMove(vector);
-    }
-  },
   _handleMove: function(vector) {
     const state = this.props.getState();
     const player = state.entities.player;
@@ -515,13 +508,13 @@ const RogueLike = React.createClass({
           break;
         case 'boss':
         case 'enemy':
-          const playerAttack = Math.floor((Math.random() * ATTACK_VARIANCE) + player.attack - ATTACK_VARIANCE);
-          const enemyAttack = Math.floor((Math.random() * ATTACK_VARIANCE) + entity.attack - ATTACK_VARIANCE);
+          const playerAttack = Math.floor((Math.random() * DAMAGE_RANGE) + player.attack - DAMAGE_RANGE);
+          const enemyAttack = Math.floor((Math.random() * DAMAGE_RANGE) + entity.attack - DAMAGE_RANGE);
           // Will hit kill enemy?
           if (entity.health > playerAttack) {
             // Will rebound hit kill player?
             if (enemyAttack > player.health) {
-              notifier.error('You died. Better luck next time!');
+              showGameMessage("ERROR", "You have been killed. Try again.");
               this._setupGame();
               return;
             }
@@ -530,7 +523,7 @@ const RogueLike = React.createClass({
           } else {
             // Is the enemy a boss?
             if (entityName === 'boss') {
-              notifier.success('A winner is you!');
+              showGameMessage("SUCCESS", "You have defeated the dragon!");
               this._setupGame();
               return;
             }
@@ -545,7 +538,7 @@ const RogueLike = React.createClass({
           break;
         case 'exit':
           resetBoard();
-          setMap(this.props.mapAlgo());
+          setMap(this.props.mapFunc());
           setLocation('player', this._getEmptyCoords());
           increaseLevel();
           this._fillMap();
@@ -558,83 +551,92 @@ const RogueLike = React.createClass({
 
   render: function() {
     const {map, entities, filledTiles, level, player, windowHeight,
-           windowWidth, winner, darkness} = this.state,
-          SIGHT = 7,
+           windowWidth, winner, darkness} = this.state, SIGHT = 7,
           // This should match the css height and width in pixels
-          tileSize = document.getElementsByClassName('tile').item(0) ? document.getElementsByClassName('tile').item(0).clientHeight : 10;
+          tileSize = document.getElementsByClassName('tile').item(0) ? document.getElementsByClassName('tile').item(0).clientHeight : 11;
     
     // Get start coords for current viewport
     const numCols = Math.floor((windowWidth / tileSize)),
           numRows = Math.floor((windowHeight/ tileSize) - 17);
+
     let startX = Math.floor(player.x - (numCols/2));
     let startY = Math.floor(player.y - (numRows/2));
+
     // Make sure start isn't less than 0
     if (startX < 0) startX = 0;
     if (startY < 0) startY = 0;
+
     // Set end coords
     let endX = startX + numCols;
     let endY = startY + numRows;
+
     // Final validation of start and end coords
     if (endX > map.length) {
       startX = numCols > map.length ? 0 : startX - (endX - map.length);
       endX = map.length;
     }
+    
     if (endY > map[0].length) {
       startY = numRows > map[0].length ? 0 : startY - (endY - map[0].length);
       endY = map[0].length;
     }
 
     // Create visible gameboard
-    let rows = [], tileClass, row;
+    let rows = [], tileClass, glyphIcon, row;
+
     for (let y = startY; y < endY; y++) {
       row = [];
       for (let x = startX; x < endX; x++) {
         let entity = filledTiles[`${x}-${y}`];
+
         if (!entity) {
           tileClass = reverseLookup[map[x][y]];
+          glyphIcon = "";
         } else {
           tileClass = entities[entity].entityType;
+          glyphIcon = glyphIcons[tileClass];
         }
         if (darkness) {
           // check if it should be dark
           const xDiff = player.x - x,
                 yDiff = player.y - y;
+
           if (Math.abs(xDiff) > SIGHT || Math.abs(yDiff) > SIGHT) {
             tileClass += ' dark';
           } else if (Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2)) >= SIGHT) {
             tileClass += ' dark';
           }
         }
-        row.push(React.createElement('div', {className: 'tile ' + tileClass, key: x + '-' + y}, ' '));
+        row.push(React.createElement('div', {className: 'glyphicon tile ' + tileClass + ' ' + glyphIcon, key: x + '-' + y}, ' '));
       }
       rows.push(React.createElement('div', {className: 'boardRow', key: 'row' + y}, row))
     }
 
     return (
-      <div id='game'>
-          <div className="gamestatus-header row">
-            <div className="col-md-2 text-center">Health:</div>
-            <div className="col-md-2 text-center">Current Weapon:</div>
-            <div className="col-md-2 text-center">Attack Strength:</div>
-            <div className="col-md-2 text-center">Level:</div>
-            <div className="col-md-2 text-center">Current XP:</div>
-            <div className="col-md-2 text-center">XP To Next Level:</div>            
-          </div>
-          <div className="gamestatus row">
-            <div className="col-md-2 text-center">{player.health}</div>
-            <div className="col-md-2 text-center">{player.weapon}</div>
-            <div className="col-md-2 text-center">{player.attack}</div>
-            <div className="col-md-2 text-center">400 XP</div>
-            <div className="col-md-2 text-center">100</div>           
-          </div>  
-
-        <div className = 'buttons'>
-          <ToggleButton
-            label = 'Toggle Darkness'
-            id = 'toggleDarkness'
-            handleClick = {this._toggleDarkness} />
+      <div id="game">
+        <div className="gamestatus-header row">
+          <div className="col-md-2 text-center">Health:</div>
+          <div className="col-md-2 text-center">Current Weapon:</div>
+          <div className="col-md-2 text-center">Attack Strength:</div>
+          <div className="col-md-2 text-center">Level:</div>
+          <div className="col-md-2 text-center">Current XP:</div>
+          <div className="col-md-2 text-center">XP To Next Level:</div>            
         </div>
-        <div id = 'board'>
+        <div className="gamestatus row">
+          <div className="col-md-2 text-center">{player.health}</div>
+          <div className="col-md-2 text-center">{player.weapon}</div>
+          <div className="col-md-2 text-center">{player.attack}</div>
+          <div className="col-md-2 text-center">400 XP</div>
+          <div className="col-md-2 text-center">100</div>           
+        </div>  
+
+        <div className='buttons'>
+          <ToggleVisibilityButton
+            label='Toggle Darkness'
+            id='toggleDarkness'
+            handleClick={this._toggleDarkness} />
+        </div>
+        <div id='board'>
           {rows}
         </div>
       </div>
@@ -642,7 +644,7 @@ const RogueLike = React.createClass({
   }
 });
 
-const ToggleButton = React.createClass({
+const ToggleVisibilityButton = React.createClass({
   propTypes: {
     label: React.PropTypes.string.isRequired,
     id: React.PropTypes.string.isRequired,
@@ -660,13 +662,16 @@ const ToggleButton = React.createClass({
 });
 
 ReactDOM.render(
-  <RogueLike mapAlgo={createMap} getState={store.getState}/>, document.getElementById("game-container")
+  <DragonSlayer mapFunc={createMap} getState={store.getState}/>, document.getElementById("game-container")
 );
 
 // MAP GENERATOR
 // Returns a matrix of the given dimensions with the number of rooms specified
+// Uses ES6 Defaults to initialize any values that aren't passed in.
 function createMap(width = 100, height = 100, maxRoomSize = 20, minRoomSize = 6, maxHallLength = 5, numRooms = 20, roomChance = .75) {
-  // init grid of walls
+  // initialize a grid of walls
+
+  // _fill is a lodash function that will fill elements of array with value from start up to, but not including, end.
   let map = _.fill(Array(width), 0);
   const blankCol = _.fill(Array(height), tileType.WALL);
   map = map.map(() => blankCol.slice());
