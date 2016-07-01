@@ -1,6 +1,7 @@
 const glyphIcons = {
   player: 'glyphicon-user',
   enemy: 'glyphicon-asterisk',
+  boss: 'glyphicon-king',
   health: 'glyphicon-heart',
   weapon: 'glyphicon-wrench',
   exit: 'glyphicon-modal-window'
@@ -97,7 +98,7 @@ function heal(entity, health) {
 function move(entity, vector) {
   store.dispatch({type: 'MOVE', entityName: entity, vector: vector});
 }
-function setLocation(entity, location) {
+function setEntityLocation(entity, location) {
   store.dispatch({type: 'SET_LOCATION', entityName: entity, location: location});
 }
 function switchWeapon(weaponName, attack) {
@@ -109,8 +110,8 @@ function removeEntity(entityName) {
 function resetBoard() {
   store.dispatch({type: 'RESET_BOARD'});
 }
-function increaseLevel() {
-  store.dispatch({type: 'INCREASE_LEVEL'});
+function goToNextLevel() {
+  store.dispatch({type: 'NEXT_LEVEL'});
 }
 function resetLevel() {
   store.dispatch({type: 'RESET_LEVEL'});
@@ -150,7 +151,8 @@ const initialState = {
       inventory: {},
       weapon: 'fists',
       attack: 10,
-      level: 0,
+      level: 1,
+      xp: 0,
       toNextLevel: 60
     }
   },
@@ -159,7 +161,7 @@ const initialState = {
     '0-0': 'player'
   },
   map: [],
-  level: 0,
+  level: 1,
   windowHeight: 500,
   windowWidth: 500,
   darkness: true
@@ -190,6 +192,7 @@ function gameReduxReducers(state = initialState, action) {
           ...state.entities,
           [action.entityName]: {
             entityType: action.entityType,
+            isBoss: 0,
             health: action.health,
             attack: action.attack,
             x: action.location.x,
@@ -285,9 +288,16 @@ function gameReduxReducers(state = initialState, action) {
           [`${state.entities.player.x}-${state.entities.player.y}`]: 'player'
         }
       };
-    case 'INCREASE_LEVEL':
+    case 'NEXT_LEVEL':
       return {
         ...state,
+        entities: {
+          ...state.entities,
+          'player': {
+            ...state.entities.player,
+            level: state.entities.player.level + 1
+          }
+        },
         level: state.level + 1
       };
     case 'RESET_LEVEL':
@@ -308,7 +318,8 @@ function gameReduxReducers(state = initialState, action) {
           ...state.entities,
           'player': {
             ...state.entities.player,
-            toNextLevel: state.entities.player.toNextLevel - action.xp
+            toNextLevel: state.entities.player.toNextLevel - action.xp,
+            xp: state.entities.player.xp + action.xp
           }
         }
       };
@@ -344,7 +355,8 @@ function gameReduxReducers(state = initialState, action) {
         entities: {
           ...state.entities,
           boss: {
-            entityType: 'enemy',
+            entityType: 'boss',
+            isBoss: 1,
             health: action.health,
             attack: action.attack,
             x: action.location.x,
@@ -433,7 +445,7 @@ const DragonSlayer = React.createClass({
   },
   _fillMap: function() {
     // Place player
-    setLocation('player', this._getEmptyCoords());
+    setEntityLocation('player', this._getEmptyCoords());
 
     // Place items
     const state = this.props.getState();
@@ -449,10 +461,12 @@ const DragonSlayer = React.createClass({
       addActor('health'+i, 'health', HEALTH_VAL, 0, this._getEmptyCoords());
       addActor('enemy'+i, 'enemy', LEVEL_MULTIPLIER * ENEMY.health, LEVEL_MULTIPLIER * ENEMY.attack, this._getEmptyCoords());
     }
+
     // Place exit if not last level
     if (state.level < 4) addActor('exit', 'exit', 0, 0, this._getEmptyCoords());
+
     // Place boss on last (fifth) level
-    if (state.level === 4) addBoss(125, 500, this._getEmptyCoords());
+    if (state.level === 1) addBoss(125, 500, this._getEmptyCoords());
   },
   _addVector: function(coords, vector) {
     return {x: coords.x + vector.x, y: coords.y + vector.y};
@@ -539,8 +553,8 @@ const DragonSlayer = React.createClass({
         case 'exit':
           resetBoard();
           setMap(this.props.mapFunc());
-          setLocation('player', this._getEmptyCoords());
-          increaseLevel();
+          setEntityLocation('player', this._getEmptyCoords());
+          goToNextLevel();
           this._fillMap();
           break;
         default:
@@ -615,26 +629,17 @@ const DragonSlayer = React.createClass({
     return (
       <div id="game">
         <div className="gamestatus-header row">
-          <div className="col-md-2 text-center">Health:</div>
-          <div className="col-md-2 text-center">Current Weapon:</div>
-          <div className="col-md-2 text-center">Attack Strength:</div>
-          <div className="col-md-2 text-center">Level:</div>
-          <div className="col-md-2 text-center">Current XP:</div>
-          <div className="col-md-2 text-center">XP To Next Level:</div>            
-        </div>
-        <div className="gamestatus row">
-          <div className="col-md-2 text-center">{player.health}</div>
-          <div className="col-md-2 text-center">{player.weapon}</div>
-          <div className="col-md-2 text-center">{player.attack}</div>
-          <div className="col-md-2 text-center">400 XP</div>
-          <div className="col-md-2 text-center">100</div>           
-        </div>  
-
-        <div className='buttons'>
-          <ToggleVisibilityButton
-            label='Toggle Darkness'
-            id='toggleDarkness'
-            handleClick={this._toggleDarkness} />
+          <div className="col-md-2 text-center">Health:<br/>{player.health}</div>
+          <div className="col-md-2 text-center">Current Weapon:<br/>{player.weapon}</div>
+          <div className="col-md-2 text-center">Attack Strength:<br/>{player.attack}</div>
+          <div className="col-md-1 text-center">Level:<br/>{player.level}</div>
+          <div className="col-md-2 text-center">Current XP:<br/>{player.xp}</div>
+          <div className="col-md-2 text-center">XP To Next Level:<br/>{player.toNextLevel}</div> 
+          <div className="col-md-1 text-center">
+            <ToggleVisibilityButton
+              id='toggleDarkness'
+              handleClick={this._toggleDarkness} />
+          </div>                    
         </div>
         <div id='board'>
           {rows}
@@ -646,14 +651,13 @@ const DragonSlayer = React.createClass({
 
 const ToggleVisibilityButton = React.createClass({
   propTypes: {
-    label: React.PropTypes.string.isRequired,
     id: React.PropTypes.string.isRequired,
     handleClick: React.PropTypes.func.isRequired
   },
   render: function() {
     return (
       <button
-        className="toggleButton"
+        className="toggleButton glyphicon glyphicon-eye-open"
         id={this.props.id}
         onClick={this.props.handleClick}>{this.props.label}
       </button>
