@@ -1,3 +1,5 @@
+const BOSS_LEVEL = 5;
+
 const glyphIcons = {
   player: 'glyphicon-user',
   enemy: 'glyphicon-asterisk',
@@ -56,13 +58,13 @@ const weapons = [
 ];
 
 // enemy attacks and health are the dungeon level + 1 times these constants
-const ENEMY = {
+const ENEMY_ATTR_MULTIPLIERS = {
   health: 20,
   attack: 12,
   xp: 10
 };
 
-const PLAYER = {
+const PLAYER_ATTR_MULTIPLIERS = {
   baseHealth: 100,
   health: 20,
   attack: 12,
@@ -77,7 +79,7 @@ function showGameMessage(status, message) {
   alert("NEED SOMETHING TO SHOW MESSAGES.\nStatus: " + status + "\nMessage: " + message);
 }
 
-/****************************** REDUX code ***********************************/
+/****************************** REDUX functions ***********************************/
 // REDUX Bound Action Creators
 function setMap(map) {
   store.dispatch({type: 'SET_MAP', map: map});
@@ -92,8 +94,8 @@ function addActor(entityName, entityType, health, attack, location) {
 function inflictDamage(entity, value) {
   store.dispatch({type: 'INFLICT_DAMAGE', entityName: entity, value: value});
 }
-function heal(entity, health) {
-  store.dispatch({type: 'HEAL', entityName: entity, value: health});
+function addHealth(entity, health) {
+  store.dispatch({type: 'ADD_HEALTH', entityName: entity, value: health});
 }
 function move(entity, vector) {
   store.dispatch({type: 'MOVE', entityName: entity, vector: vector});
@@ -185,14 +187,16 @@ function gameReduxReducers(state = initialState, action) {
       return {
         ...state,
         filledTiles: {
+          // Add currently filled tiles
           ...state.filledTiles,
+          // Add this new actor at location of x-y coords and assign the entity name
           [`${action.location.x}-${action.location.y}`]: action.entityName
         },
         entities: {
+          // Add new entity to entities array to track number on board
           ...state.entities,
           [action.entityName]: {
             entityType: action.entityType,
-            isBoss: 0,
             health: action.health,
             attack: action.attack,
             x: action.location.x,
@@ -212,7 +216,7 @@ function gameReduxReducers(state = initialState, action) {
           }
         }
       };
-    case 'HEAL':
+    case 'ADD_HEALTH':
       return {
         ...state,
         entities: {
@@ -378,37 +382,38 @@ function gameReduxReducers(state = initialState, action) {
 // REDUX Store for game data
 let store = Redux.createStore(gameReduxReducers);
 
+// ***************** END REDUX CODE ********************
+
 // Game Component
 const DragonSlayer = React.createClass({
   propTypes: {
-    // This is the algorithm for creating the map.
-    // Must be a function that ouputs a matrix of 0 (wall) and 1 (floor) tiles
+    // This is the algorithm for creating the map - it outputs a matrix of 0 (wall) and 1 (floor) tiles
     mapFunc: React.PropTypes.func.isRequired,
     getState: React.PropTypes.func.isRequired
   },
   getInitialState: function() {
-    return this._select(this.props.getState());
+    return this.retrieveBoardState(this.props.getState());
   },
   componentWillMount: function() {
-    this._setupGame();
+    this.generateBoard();
   },
   componentDidMount: function() {
-    this._storeDataChanged();
-    this.unsubscribe = store.subscribe(this._storeDataChanged);
-    window.addEventListener('keydown', this._handleKeypress);
+    this.updateBoardFromState();
+    this.unsubscribe = store.subscribe(this.updateBoardFromState);
+    window.addEventListener('keydown', this.userPressedKey);
   },
   componentWillUnmount: function() {
     this.unsubscribe();
-    window.removeEventListener('keydown', this._handleKeypress);
+    window.removeEventListener('keydown', this.userPressedKey);
     window.removeEventListener('resize', setWindowSize);
   },
-  _storeDataChanged: function() {
+  updateBoardFromState: function() {
     const newState = this.props.getState()
     // Should player level up?
-    if (newState.entities.player.toNextLevel <= 0) this._playerLeveledUp();
-    this.setState(this._select(newState));
+    if (newState.entities.player.toNextLevel <= 0) this.playerLeveledUp();
+    this.setState(this.retrieveBoardState(newState));
   },
-  _select: function(state) {
+  retrieveBoardState: function(state) {
     return {
       player: state.entities.player,
       entities: state.entities,
@@ -420,18 +425,17 @@ const DragonSlayer = React.createClass({
       darkness: state.darkness
     }
   },
-  _playerLeveledUp: function() {
+  playerLeveledUp: function() {
     const currLevel = this.state.player.level + 1;
-    levelUp(currLevel * PLAYER.attack, currLevel * PLAYER.health,
-              (currLevel + 1) * PLAYER.toNextLevel);
+    levelUp(currLevel * PLAYER_ATTR_MULTIPLIERS.attack, currLevel * PLAYER_ATTR_MULTIPLIERS.health, (currLevel + 1) * PLAYER_ATTR_MULTIPLIERS.toNextLevel);
   },
-  _setupGame: function() {
+  generateBoard: function() {
     resetMap(this.props.mapFunc());
-    this._fillMap()
-    this._storeDataChanged();
+    this.placeItemsOnMap()
+    this.updateBoardFromState();
     setWindowSize();
   },
-  _getEmptyCoords: function() {
+  findEmptyTiles: function() {
     const {map, filledTiles} = this.props.getState();
     let coords, x, y;
     do {
@@ -443,82 +447,85 @@ const DragonSlayer = React.createClass({
     } while (!coords);
     return coords;
   },
-  _fillMap: function() {
-    // Place player
-    setEntityLocation('player', this._getEmptyCoords());
+  placeItemsOnMap: function() {
+    // Place player on the map
+    setEntityLocation('player', this.findEmptyTiles());
 
     // Place items
     const state = this.props.getState();
     const weapon = weapons[state.level];
-    addActor(weapon.entityName, 'weapon', weapon.health, weapon.attack, this._getEmptyCoords());
+    addActor(weapon.entityName, 'weapon', weapon.health, weapon.attack, this.findEmptyTiles());
 
     // Place health and enemies
-    const NUM_THINGS = 7,
-          HEALTH_VAL = 20,
-          LEVEL_MULTIPLIER = state.level + 1;
+    const NUM_THINGS = 7, HEALTH_VAL = 20, LEVEL_MULTIPLIER = state.level + 1;
 
     for (let i = 0; i < NUM_THINGS; i++) {
-      addActor('health'+i, 'health', HEALTH_VAL, 0, this._getEmptyCoords());
-      addActor('enemy'+i, 'enemy', LEVEL_MULTIPLIER * ENEMY.health, LEVEL_MULTIPLIER * ENEMY.attack, this._getEmptyCoords());
+      addActor('health'+i, 'health', HEALTH_VAL, 0, this.findEmptyTiles());
+      addActor('enemy'+i, 'enemy', LEVEL_MULTIPLIER * ENEMY_ATTR_MULTIPLIERS.health, LEVEL_MULTIPLIER * ENEMY_ATTR_MULTIPLIERS.attack, this.findEmptyTiles());
     }
 
     // Place exit if not last level
-    if (state.level < 4) addActor('exit', 'exit', 0, 0, this._getEmptyCoords());
+    if (state.level < BOSS_LEVEL) addActor('exit', 'exit', 0, 0, this.findEmptyTiles());
 
     // Place boss on last (fifth) level
-    if (state.level === 1) addBoss(125, 500, this._getEmptyCoords());
+    if (state.level === BOSS_LEVEL) addBoss(125, 500, this.findEmptyTiles());
   },
-  _addVector: function(coords, vector) {
-    return {x: coords.x + vector.x, y: coords.y + vector.y};
+  addMoves: function(coords, moves) {
+    return {x: coords.x + moves.x, y: coords.y + moves.y};
   },
   _toggleDarkness: function() {
     toggleDarkness();
   },
-  _handleKeypress: function(e) {
-    let vector = '';
+  userPressedKey: function(e) {
+    let moves = '';
     switch (e.keyCode) {
       case 37:
-        vector = {x: -1, y: 0};
+        moves = {x: -1, y: 0};
         break;
       case 38:
-        vector = {x: 0, y: -1};
+        moves = {x: 0, y: -1};
         break;
       case 39:
-        vector = {x: 1, y: 0};
+        moves = {x: 1, y: 0};
         break;
       case 40:
-        vector = {x: 0, y: 1};
+        moves = {x: 0, y: 1};
         break;
       default:
-        vector = '';
+        moves = '';
         break;
     }
-    if (vector) {
+    if (moves) {
       e.preventDefault();
-      this._handleMove(vector);
+      this.movePlayer(moves);
     }
   },
-  _handleMove: function(vector) {
+  movePlayer: function(moves) {
     const state = this.props.getState();
     const player = state.entities.player;
     const map = state.map;
-    const newCoords = this._addVector({x: player.x, y: player.y}, vector);
-    if (newCoords.x > 0 && newCoords.y > 0 && newCoords.x < map.length &&
-        newCoords.y < map[0].length &&
-        map[newCoords.x][newCoords.y] !== tileType.WALL) {
-      // Tile is not a wall, determine if it contains an entity
-      const entityName = state.filledTiles[newCoords.x + '-' + newCoords.y];
+    const newPlayerLocation = this.addMoves({x: player.x, y: player.y}, moves);
+
+    if ((newPlayerLocation.x > 0 && newPlayerLocation.y > 0) && 
+        (newPlayerLocation.x < map.length) &&
+        (newPlayerLocation.y < map[0].length) &&
+        (map[newPlayerLocation.x][newPlayerLocation.y] !== tileType.WALL) {
+
+      // This location is not part of a wall, so check if it already has an entity
+      const entityName = state.filledTiles[newPlayerLocation.x + '-' + newPlayerLocation.y];
+
       // move and return if empty
       if (!entityName) {
-        move('player', vector);
+        move('player', moves);
         return;
       }
+
       // handle encounters with entities
       const entity = state.entities[entityName];
       switch (entity.entityType) {
         case 'weapon':
           switchWeapon(entityName, entity.attack);
-          move('player', vector);
+          move('player', moves);
           break;
         case 'boss':
         case 'enemy':
@@ -529,7 +536,7 @@ const DragonSlayer = React.createClass({
             // Will rebound hit kill player?
             if (enemyAttack > player.health) {
               showGameMessage("ERROR", "You have been killed. Try again.");
-              this._setupGame();
+              this.generateBoard();
               return;
             }
             inflictDamage(entityName,playerAttack);
@@ -538,24 +545,24 @@ const DragonSlayer = React.createClass({
             // Is the enemy a boss?
             if (entityName === 'boss') {
               showGameMessage("SUCCESS", "You have defeated the dragon!");
-              this._setupGame();
+              this.generateBoard();
               return;
             }
-            gainXp((state.level + 1) * ENEMY.xp);
+            gainXp((state.level + 1) * ENEMY_ATTR_MULTIPLIERS.xp);
             removeEntity(entityName);
           }
           break;
         case 'health':
-          heal('player', entity.health);
+          addHealth('player', entity.health);
           removeEntity(entityName);
-          move('player', vector);
+          move('player', moves);
           break;
         case 'exit':
           resetBoard();
           setMap(this.props.mapFunc());
-          setEntityLocation('player', this._getEmptyCoords());
+          setEntityLocation('player', this.findEmptyTiles());
           goToNextLevel();
-          this._fillMap();
+          this.placeItemsOnMap();
           break;
         default:
           break;
@@ -565,7 +572,7 @@ const DragonSlayer = React.createClass({
 
   render: function() {
     const {map, entities, filledTiles, level, player, windowHeight,
-           windowWidth, winner, darkness} = this.state, SIGHT = 7,
+           windowWidth, winner, darkness} = this.state, VISIBILTY = 10,
           // This should match the css height and width in pixels
           tileSize = document.getElementsByClassName('tile').item(0) ? document.getElementsByClassName('tile').item(0).clientHeight : 11;
     
@@ -615,9 +622,9 @@ const DragonSlayer = React.createClass({
           const xDiff = player.x - x,
                 yDiff = player.y - y;
 
-          if (Math.abs(xDiff) > SIGHT || Math.abs(yDiff) > SIGHT) {
+          if (Math.abs(xDiff) > VISIBILTY || Math.abs(yDiff) > VISIBILTY) {
             tileClass += ' dark';
-          } else if (Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2)) >= SIGHT) {
+          } else if (Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2)) >= VISIBILTY) {
             tileClass += ' dark';
           }
         }
