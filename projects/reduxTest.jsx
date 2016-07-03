@@ -23,31 +23,31 @@ const weapons = [
     entityName: 'Staff',
     entityType: 'weapon',
     health: 0,
-    attack: 15
+    attack: 5
   },
   {
     entityName: 'Hammer',
     entityType: 'weapon',
     health: 0,
-    attack: 20
+    attack: 10
   },
   {
     entityName: 'Hanzo Sword',
     entityType: 'weapon',
     health: 0,
-    attack: 30
+    attack: 15
   },
   {
     entityName: 'Blades of Chaos',
     entityType: 'weapon',
     health: 0,
-    attack: 40
+    attack: 20
   },
   {
     entityName: 'Dragon Spear',
     entityType: 'weapon',
     health: 0,
-    attack: 50
+    attack: 30
   }
 ];
 
@@ -84,14 +84,14 @@ function resetMap(wallsOrTilesStore) {
 function addActor(entityName, entityType, health, attack, location) {
   store.dispatch({type: 'ADD_ACTOR', entityName: entityName, entityType: entityType, health: health, attack: attack, location: location});
 }
-function inflictDamage(entity, value) {
-  store.dispatch({type: 'INFLICT_DAMAGE', entityName: entity, value: value});
+function dealDamage(entity, value) {
+  store.dispatch({type: 'DEAL_DAMAGE', entityName: entity, value: value});
 }
 function addHealth(entity, health) {
   store.dispatch({type: 'ADD_HEALTH', entityName: entity, value: health});
 }
-function move(entity, vector) {
-  store.dispatch({type: 'MOVE', entityName: entity, vector: vector});
+function moveEntity(entity, vector) {
+  store.dispatch({type: 'MOVE_ENTITY', entityName: entity, vector: vector});
 }
 function setEntityLocation(entity, location) {
   store.dispatch({type: 'SET_LOCATION', entityName: entity, location: location});
@@ -110,8 +110,8 @@ function goToNextBoardLevel() {
 }
 function detectWindowSize() {
   store.dispatch({type: 'DETECT_WINDOW_SIZE',
-    windowWidth: window.innerWidth,
-    windowHeight: window.innerHeight
+    boardWidth: window.innerWidth,
+    boardHeight: window.innerHeight
   });
 }
 function addPlayerXp(xp) {
@@ -131,7 +131,7 @@ function toggleUserVisibility() {
   store.dispatch({type: 'TOGGLE_USER_VISIBILITY'});
 }
 
-// REDUX Initial State
+// Initial State of our game to use with REDUX
 const initialState = {
   // entities is an map of ids to object describing the entity
   entities: {
@@ -148,14 +148,11 @@ const initialState = {
       toNextLevel: 60
     }
   },
-  // Link occupied space with entity id
-  filledTiles: {
-    '0-0': 'player'
-  },
+  filledTiles: {'0-0': 'player'},
   wallsOrTilesStore: [],
   boardLevel: 1,
-  windowHeight: 500,
-  windowWidth: 500,
+  boardHeight: 500,
+  boardWidth: 500,
   userInDark: true
 };
 
@@ -195,7 +192,7 @@ function gameReduxReducers(state = initialState, action) {
         }
       };
 
-    case 'INFLICT_DAMAGE':
+    case 'DEAL_DAMAGE':
       return {
         ...state,
         entities: {
@@ -225,18 +222,18 @@ function gameReduxReducers(state = initialState, action) {
           'player': {
             ...state.entities.player,
             weapon: action.weapon,
-            attack: action.attack
+            attack: state.entities.player.attack + action.attack
           }
         }
       };
-    case 'MOVE':
+    case 'MOVE_ENTITY':
       return {
         ...state,
         filledTiles: _.chain(state.filledTiles)
-                          .omit(`${state.entities[action.entityName].x}-${state.entities[action.entityName].y}`)
-                          .set(`${state.entities[action.entityName].x + action.vector.x}-${state.entities[action.entityName].y + 
-                            action.vector.y}`,action.entityName)
-                          .value(),
+                      .omit(`${state.entities[action.entityName].x}-${state.entities[action.entityName].y}`)
+                      .set(`${state.entities[action.entityName].x + action.vector.x}-${state.entities[action.entityName].y + 
+                        action.vector.y}`,action.entityName)
+                      .value(),
         entities: {
           ...state.entities,
           [action.entityName]: {
@@ -250,9 +247,9 @@ function gameReduxReducers(state = initialState, action) {
       return {
         ...state,
         filledTiles: _.chain(state.filledTiles)
-                          .omit(`${state.entities[action.entityName].x}-${state.entities[action.entityName].y}`)
-                          .set(`${action.location.x}-${action.location.y}`, action.entityName)
-                          .value(),
+                        .omit(`${state.entities[action.entityName].x}-${state.entities[action.entityName].y}`)
+                        .set(`${action.location.x}-${action.location.y}`, action.entityName)
+                        .value(),
         entities: {
           ...state.entities,
           [action.entityName]: {
@@ -266,8 +263,8 @@ function gameReduxReducers(state = initialState, action) {
       return {
         ...state,
         filledTiles: _.chain(state.filledTiles)
-                          .omit(`${state.entities[action.entityName].x}-${state.entities[action.entityName].y}`)
-                          .value(),
+                        .omit(`${state.entities[action.entityName].x}-${state.entities[action.entityName].y}`)
+                        .value(),
         entities: _.chain(state.entities)
                     .omit(action.entityName)
                     .value()
@@ -296,8 +293,8 @@ function gameReduxReducers(state = initialState, action) {
     case 'DETECT_WINDOW_SIZE':
       return {
         ...state,
-        windowHeight: action.windowHeight,
-        windowWidth: action.windowWidth
+        boardHeight: action.boardHeight,
+        boardWidth: action.boardWidth
       };
     case 'ADD_XP_TO_PLAYER':
       return {
@@ -372,7 +369,7 @@ let store = Redux.createStore(gameReduxReducers);
 const DragonSlayer = React.createClass({
   propTypes: {
     getState: React.PropTypes.func.isRequired,
-    mapFunc: React.PropTypes.func.isRequired
+    gameBoardGenerator: React.PropTypes.func.isRequired
   },
   getInitialState: function() {
     return this.retrieveBoardState(this.props.getState());
@@ -398,7 +395,7 @@ const DragonSlayer = React.createClass({
   retrieveBoardState: function(state) {
     return {
       player: state.entities.player, entities: state.entities, wallsOrTilesStore: state.wallsOrTilesStore, filledTiles: state.filledTiles,
-      boardLevel: state.boardLevel, userInDark: state.userInDark, windowHeight: state.windowHeight, windowWidth: state.windowWidth      
+      boardLevel: state.boardLevel, userInDark: state.userInDark, boardHeight: state.boardHeight, boardWidth: state.boardWidth      
     }
   },
   playerLeveledUp: function() {
@@ -406,7 +403,7 @@ const DragonSlayer = React.createClass({
     levelUpPlayer(currLevel * MULTIPLIERS.PLAYER.attack, currLevel * MULTIPLIERS.PLAYER.health, (currLevel + 1) * MULTIPLIERS.PLAYER.toNextLevel);
   },
   generateBoard: function() {
-    resetMap(this.props.mapFunc());
+    resetMap(this.props.gameBoardGenerator());
     this.placeItemsOnMap()
     this.updateBoardFromState();
     detectWindowSize();
@@ -503,34 +500,36 @@ const DragonSlayer = React.createClass({
       // This location is not part of a wall, so check if it already has an entity
       const entityName = state.filledTiles[newPlayerLocation.x + '-' + newPlayerLocation.y];
 
-      // move and return if empty
+      // move and return if this space is empty
       if (!entityName) {
-        move('player', moves);
+        moveEntity('player', moves);
         return;
       }
 
-      // handle encounters with entities
+      // this new space is not empty. Handle run in with entity in this space
+      // what is it we are running into?
       const entity = state.entities[entityName];
       switch (entity.entityType) {
         case 'weapon':
           switchWeapon(entityName, entity.attack);
           showGameMessage("SUCCESS", "NEW WEAPON UNLOCKED: " + entityName, 2000);
-          move('player', moves);
+          moveEntity('player', moves);
           break;
         case 'boss':
         case 'enemy':
           const playerAttack = Math.floor((Math.random() * DAMAGE_RANGE) + player.attack - DAMAGE_RANGE);
           const enemyAttack = Math.floor((Math.random() * DAMAGE_RANGE) + entity.attack - DAMAGE_RANGE);
-          // Will hit kill enemy?
+          // Dpes this hit kill the enemy?
           if (entity.health > playerAttack) {
-            // Will rebound hit kill player?
+            // Does enemies hit kill player?
             if (enemyAttack > player.health) {
               showGameMessage("ERROR", "You have been killed. Try again.", 5000);
+              // Player lost. Restart the game.
               this.generateBoard();
               return;
             }
-            inflictDamage(entityName, playerAttack);
-            inflictDamage('player',enemyAttack);
+            dealDamage(entityName, playerAttack);
+            dealDamage('player',enemyAttack);
 
             showGameMessage("BATTLE", "You were dealt damage of: " + entity.attack, 1000);
             showGameMessage("BATTLE", "Enemy Health Remaining: " + entity.health, 1000);
@@ -550,11 +549,11 @@ const DragonSlayer = React.createClass({
           addHealth('player', entity.health);
           showGameMessage("SUCCESS", entity.health + " health points added", 2000);
           removeEntity(entityName);
-          move('player', moves);
+          moveEntity('player', moves);
           break;
         case 'exit':
           resetBoard();
-          setMap(this.props.mapFunc());
+          setMap(this.props.gameBoardGenerator());
           setEntityLocation('player', this.findEmptyTiles());          
           goToNextBoardLevel();
           showGameMessage("SUCCESS", "NEXT LEVEL!", 2000);
@@ -567,67 +566,64 @@ const DragonSlayer = React.createClass({
   },
 
   render: function() {
-    const {wallsOrTilesStore, entities, filledTiles, boardLevel, player, windowHeight,
-           windowWidth, winner, userInDark} = this.state, VISIBILTY = 10,
-          // This should match the css height and width in pixels
-          tileSize = document.getElementsByClassName('tile').item(0) ? document.getElementsByClassName('tile').item(0).clientHeight : 11;
+    const {wallsOrTilesStore, entities, filledTiles, boardLevel, player, boardHeight, boardWidth, winner, userInDark} = this.state;
+    const VISIBILTY = 10, tileSize = 11;
     
-    // Get start coords for current viewport
-    const numCols = Math.floor((windowWidth / tileSize)),
-          numRows = Math.floor((windowHeight/ tileSize) - 17);
+    // Calculate how many rows and columns we can utilize from the state of our game
+    const numCols = Math.floor((boardWidth / tileSize)), 
+      numRows = Math.floor((boardHeight/ tileSize) - 5);
 
-    let startX = Math.floor(player.x - (numCols/2));
-    let startY = Math.floor(player.y - (numRows/2));
+    // Just need to show a portion of the board. so get the visible portion surrounding the player
+    let leftSideOfVisibleBoard = Math.floor(player.x - (numCols/2));
+    let topOfVisibleBoard = Math.floor(player.y - (numRows/2));
 
-    // Make sure start isn't less than 0
-    if (startX < 0) startX = 0;
-    if (startY < 0) startY = 0;
+    // Would this try to place at less than 0?
+    if (leftSideOfVisibleBoard < 0) leftSideOfVisibleBoard = 0;
+    if (topOfVisibleBoard < 0) topOfVisibleBoard = 0;
 
     // Set end coords
-    let endX = startX + numCols;
-    let endY = startY + numRows;
+    let endX = leftSideOfVisibleBoard + numCols;
+    let endY = topOfVisibleBoard + numRows;
 
     // Final validation of start and end coords
     if (endX > wallsOrTilesStore.length) {
-      startX = numCols > wallsOrTilesStore.length ? 0 : startX - (endX - wallsOrTilesStore.length);
+      leftSideOfVisibleBoard = numCols > wallsOrTilesStore.length ? 0 : leftSideOfVisibleBoard - (endX - wallsOrTilesStore.length);
       endX = wallsOrTilesStore.length;
     }
     
     if (endY > wallsOrTilesStore[0].length) {
-      startY = numRows > wallsOrTilesStore[0].length ? 0 : startY - (endY - wallsOrTilesStore[0].length);
+      topOfVisibleBoard = numRows > wallsOrTilesStore[0].length ? 0 : topOfVisibleBoard - (endY - wallsOrTilesStore[0].length);
       endY = wallsOrTilesStore[0].length;
     }
 
     // Create visible gameboard
-    let rows = [], tileClass, glyphIcon, row;
+    let rows = [], classesForCell, glyphIcon, row, xCellsFromPlayer, yCellsFromPlayer;
 
-    for (let y = startY; y < endY; y++) {
+    for (let y = topOfVisibleBoard; y < endY; y++) {
       row = [];
-      for (let x = startX; x < endX; x++) {
-        let entity = filledTiles[`${x}-${y}`];
+      for (let x = leftSideOfVisibleBoard; x < endX; x++) {
+        let entityAtLocation = filledTiles[x + '-' + y];
+        //let entityAtLocation = filledTiles[`${x}-${y}`];
 
-        if (!entity) {
-          tileClass = tileTypeKey[wallsOrTilesStore[x][y]];
+        if (!entityAtLocation) {
+          classesForCell = tileTypeKey[wallsOrTilesStore[x][y]];
           glyphIcon = "";
         } else {
-          tileClass = entities[entity].entityType;
-          glyphIcon = glyphIcons[tileClass];
+          classesForCell = entities[entityAtLocation].entityType;
+          glyphIcon = glyphIcons[classesForCell];
         }
         if (userInDark) {
-          // check if it should be dark
-          const xDiff = player.x - x,
-                yDiff = player.y - y;
-
-          if (Math.abs(xDiff) > VISIBILTY || Math.abs(yDiff) > VISIBILTY) {
-            tileClass += ' dark';
-          } else if (Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2)) >= VISIBILTY) {
-            tileClass += ' dark';
-          }
+          // Visibility is currently set to darkness, so check if this row is out of visibility randge and would be dark
+          xCellsFromPlayer = player.x - x;
+          yCellsFromPlayer = player.y - y;
+          if((xCellsFromPlayer * -1) > VISIBILTY || (yCellsFromPlayer * -1) > VISIBILTY || 
+            (Math.sqrt(Math.pow(xCellsFromPlayer, 2) + Math.pow(yCellsFromPlayer, 2)) >= VISIBILTY)) 
+            classesForCell += ' dark';
         }
-        row.push(React.createElement('div', {className: 'glyphicon tile ' + tileClass + ' ' + glyphIcon, key: x + '-' + y}, ' '));
+        row.push(<GameCell cellClass={'glyphicon tile ' + classesForCell + ' ' + glyphIcon} key={x + '-' + y} />);
       }
       rows.push(React.createElement('div', {className: 'boardRow', key: 'row' + y}, row))
-    }
+    } 
 
     return (
       <div id="game">
@@ -635,8 +631,9 @@ const DragonSlayer = React.createClass({
           <div className="col-md-1 text-center">Health:<br/>{player.health}</div>
           <div className="col-md-2 text-center">Current Weapon:<br/>{player.weapon}</div>
           <div className="col-md-2 text-center">Attack Strength:<br/>{player.attack}</div>
-          <div className="col-md-2 text-center">Level:<br/>{boardLevel}</div>
-          <div className="col-md-2 text-center">Current XP:<br/>{player.xp}</div>
+          <div className="col-md-1 text-center">Board:<br/>{boardLevel}</div>
+          <div className="col-md-2 text-center">Player Level:<br/>{player.playerLevel}</div>
+          <div className="col-md-1 text-center">XP:<br/>{player.xp}</div>
           <div className="col-md-2 text-center">XP To Next Level:<br/>{player.toNextLevel}</div> 
           <div className="col-md-1 text-center">
 
@@ -670,6 +667,14 @@ const DragonSlayer = React.createClass({
   }
 });
 
+const GameCell = React.createClass({
+  render: function() {
+    return (
+      <cell className={this.props.cellClass}>&nbsp;</cell>
+    )
+  }
+});
+
 const ToggleGlyphButton = React.createClass({
   propTypes: {
     id: React.PropTypes.string.isRequired,
@@ -691,7 +696,7 @@ const ToggleGlyphButton = React.createClass({
 });
 
 ReactDOM.render(
-  <DragonSlayer mapFunc={createMap} getState={store.getState}/>, document.getElementById("game-container")
+  <DragonSlayer gameBoardGenerator={createGameBoardArray} getState={store.getState}/>, document.getElementById("game-container")
 );
 
 // function that handles messages to our user.
@@ -699,114 +704,135 @@ function showGameMessage(status, message, duration) {
   humane.log(message, { timeout: duration, addnCls: 'humane-message-' + status });
 }
 
-// This function will create a store holding every cell on the map. It will either have a 0 for Wall, or 1 for Floor
-// Returns a matrix of the given dimensions with the number of rooms specified
-// Uses ES6 Defaults to initialize any values that aren't passed in.
-function createMap(width = 100, height = 100, maxRoomSize = 20, minRoomSize = 6, maxHallLength = 5, numRooms = 20, roomChance = .75) {
-  // initialize a grid of walls
+// This function will create an array which will act as a store representing each cell on the map. It will either have a 0 for wall, or 1 for free space
+// Use ES6 Defaults to initialize any values that aren't passed in.
+function createGameBoardArray(w=100, h=100, maxSizeForRoom=20, minSizeForRoom=6, numberOfRoomsNeeded=20) {
+  // Create an array of all wall tiles to start. It will consist of an array of arrays that has h rows and each row has w columns
+  let wallsOrTilesStore = [];
 
-  // _fill is a lodash function that will fill elements of array with value from start up to, but not including, end.
-  let wallsOrTilesStore = _.fill(Array(width), 0);
-  const blankCol = _.fill(Array(height), tileType.w);
-  wallsOrTilesStore = wallsOrTilesStore.map(() => blankCol.slice());
+  // Create an array of arrays that has w items in each array or columns (width of board given) and h arrays or rows (height of board given)
+  for(let rows = 0; rows < h; rows++) {
+    let columns = [];
+    for(let cols = 0; cols < w; cols++) {
+      // Push cell of type w (0) onto array for a column
+      columns.push(tileType.w);
+    }
+    wallsOrTilesStore.push(columns);
+  }
+
+  //console.log("wallsOrTilesStore: ", wallsOrTilesStore);
   
-  // create first room
-  fillRect(wallsOrTilesStore, {x: 45, y: 45}, {x: 10, y: 10}, tileType.f);
-  
-  // create rooms
-  for (let i = 0; i < numRooms; i++) {
-    placeRoom(wallsOrTilesStore);
+  let startingPoint = {x: 30, y: 30}, firstRoomDimensions = {x: 15, y: 15};
+
+  // create an initial room so the others can build off this. 
+  //   pass in the game board, starting coords of this room, the room size, and the type of these which is floor
+  createRoomAtLocation(wallsOrTilesStore, startingPoint, firstRoomDimensions);
+
+  // create the other rooms desired
+  for (let roomsCount = 0; roomsCount < numberOfRoomsNeeded; roomsCount++) {
+    placeRoom(wallsOrTilesStore, maxSizeForRoom, minSizeForRoom);
+  }
+  return wallsOrTilesStore;  
+}
+
+// This function create a room in board matrix. The room starts at startingCoords and will be the dimensions passed in
+function createRoomAtLocation(wallsOrTilesStore, startingCoords, dimensions) {
+  // start at the the x location of the startingCoords passed in. The room will be dimensions.x wide
+  // For each row, we are going to go down dimensions.y and fill with tile type of floor
+
+  // Start at location x in array of arrays. So start at COLUMN X and go up to COLUMN desired width
+  for (let xLoc = startingCoords.x; xLoc < startingCoords.x + dimensions.x; xLoc++) {
+    for (let yLoc = startingCoords.y; yLoc < startingCoords.y + dimensions.y; yLoc++) {
+      wallsOrTilesStore[xLoc][yLoc] = tileType.f;
+    }
   }
   return wallsOrTilesStore;
-  
-  // wallsOrTilesStore is a grid, startCoord is an object like {x: 13, y: 15}
-  // size is an object like {x: 5, y: 7}, fillVal is an int
-  function fillRect(wallsOrTilesStore, startCoord, size, fillVal) {
-    for (let i = startCoord.x; i < startCoord.x + size.x; i++) {
-      _.fill(wallsOrTilesStore[i], fillVal, startCoord.y, size.y + startCoord.y);
-    }
-    return wallsOrTilesStore;
-  }
-  
-  // Will keep trying to place random rooms in random places until it succeeds.
-  function placeRoom(wallsOrTilesStore) {
-    let wall, width, height, isRoom, startX, startY, coords, numClear;
-    while (true) {
-      // Create random location and room
-      // TODO - Choose wall or hall
-      numClear = 0;
-      wall = getCompassHeadingNextWall(wallsOrTilesStore);
-      coords = wall.coords;
-      width = Math.floor((Math.random() * (maxRoomSize - minRoomSize)) + minRoomSize);
-      height = Math.floor((Math.random() * (maxRoomSize - minRoomSize)) + minRoomSize);
-      switch (wall.openDir) {
-        case 'E':
-          startX = coords.x - width;
-          startY = (coords.y - Math.floor(height / 2)) + getDoorOffset(height);
-          break;
-        case 'W':
-          startX = coords.x + 1;
-          startY = (coords.y - Math.floor(height / 2)) + getDoorOffset(height);
-          break;
-        case 'N':
-          startX = (coords.x - Math.floor(width / 2)) + getDoorOffset(width);
-          startY = coords.y + 1;
-          break;
-        case 'S':
-          startX = (coords.x - Math.floor(width / 2)) + getDoorOffset(width);
-          startY = coords.y - height;
-          break;
-        default:
-          break;
-      }
-      // Exit if room would be outside matrix
-      if (startX < 0 || startY < 0 || startX + width >= wallsOrTilesStore.length || startY + height >= wallsOrTilesStore[0].length) {
-        continue;
-      }
-      // check if all spaces are clear
-      for (let i = startX; i < startX + width; i++) {
-        if (wallsOrTilesStore[i].slice(startY, startY + height).every(tile => tile === tileType.w)) {
-          numClear++;
-        }
-      }
-      if (numClear === width) {
-        fillRect(wallsOrTilesStore, {x: startX, y: startY}, {x: width, y: height}, tileType.f);
-        wallsOrTilesStore[coords.x][coords.y] = 1;
-        return wallsOrTilesStore;
-      }
-    }
-    
-    function getDoorOffset(length) {
-      return Math.floor((Math.random() * length) - Math.floor((length - 1 ) / 2));
-    }
-  }
+}
 
-  // Takes a wallsOrTilesStore matrix and a coordinate object
-  // Returns false if not a wall, otherwise the direction of the open tile
-  function isWallOtherwiseDirectionToOpenTile(wallsOrTilesStore, coords) {
-    // return 0 this board spot is not a wall
-    if (wallsOrTilesStore[coords.x][coords.y] !== tileType.w) { return 0; }
-    // No walls West
-    if (typeof wallsOrTilesStore[coords.x - 1] !== 'undefined' && wallsOrTilesStore[coords.x - 1][coords.y] === tileType.f) return 'W';
-    // No walls East
-    if (typeof wallsOrTilesStore[coords.x + 1] !== 'undefined' && wallsOrTilesStore[coords.x + 1][coords.y] === tileType.f) return 'E';
-    // No walls North
-    if (wallsOrTilesStore[coords.x][coords.y - 1] === tileType.f) return 'N';
-    // No walls South
-    if (wallsOrTilesStore[coords.x][coords.y + 1] === tileType.f) return 'S';
-    return 0;
-  }  
-  
-  // Loops until it finds a wall tile and returns compass heading of that wall
-  function getCompassHeadingNextWall(wallsOrTilesStore) {
-    const loc = {x: 0, y: 0};
-    let directionOfNextWall = 0;
+function printMatrix(matrix) {
+  for (let row = 0; row < matrix.length; row++) {
+    console.log(matrix[row]);
+  }
+}
 
-    while (!directionOfNextWall) {
-      loc.x = Math.floor(Math.random() * wallsOrTilesStore.length);
-      loc.y = Math.floor(Math.random() * wallsOrTilesStore[0].length);
-      directionOfNextWall = isWallOtherwiseDirectionToOpenTile(wallsOrTilesStore, loc);
+// Loops until it finds a wall tile and returns compass heading of that wall
+function getCompassHeadingNextWall(wallsOrTilesStore) {
+  const loc = {x: 0, y: 0};
+  let directionOfNextWall = 0;
+
+  while (!directionOfNextWall) {
+    loc.x = Math.floor(Math.random() * wallsOrTilesStore.length);
+    loc.y = Math.floor(Math.random() * wallsOrTilesStore[0].length);
+    directionOfNextWall = isWallOtherwiseDirectionToOpenTile(wallsOrTilesStore, loc);
+  }
+  return {coords: loc, openDir: directionOfNextWall};
+}
+
+// Takes a wallsOrTilesStore matrix and a coordinate object
+// Returns false if not a wall, otherwise the direction of the open tile
+function isWallOtherwiseDirectionToOpenTile(wallsOrTilesStore, coords) {
+  // return 0 this board spot is not a wall
+  if (wallsOrTilesStore[coords.x][coords.y] !== tileType.w) { return 0; }
+  // No walls West
+  if (typeof wallsOrTilesStore[coords.x - 1] !== 'undefined' && wallsOrTilesStore[coords.x - 1][coords.y] === tileType.f) return 'W';
+  // No walls East
+  if (typeof wallsOrTilesStore[coords.x + 1] !== 'undefined' && wallsOrTilesStore[coords.x + 1][coords.y] === tileType.f) return 'E';
+  // No walls North
+  if (wallsOrTilesStore[coords.x][coords.y - 1] === tileType.f) return 'N';
+  // No walls South
+  if (wallsOrTilesStore[coords.x][coords.y + 1] === tileType.f) return 'S';
+  return 0;
+} 
+
+function getDoorOffset(length) {
+  return Math.floor((Math.random() * length) - Math.floor((length - 1 ) / 2));
+}
+
+// Will keep trying to place random rooms in random places until it succeeds.
+function placeRoom(wallsOrTilesStore, maxSizeForRoom, minSizeForRoom) {
+  let wall, w, h, isRoom, startX, startY, coords, numClear;
+  while (true) {
+    // Create random location and room
+    // TODO - Choose wall or hall
+    numClear = 0;
+    wall = getCompassHeadingNextWall(wallsOrTilesStore);
+    coords = wall.coords;
+    w = Math.floor((Math.random() * (maxSizeForRoom - minSizeForRoom)) + minSizeForRoom);
+    h = Math.floor((Math.random() * (maxSizeForRoom - minSizeForRoom)) + minSizeForRoom);
+    switch (wall.openDir) {
+      case 'E':
+        startX = coords.x - w;
+        startY = (coords.y - Math.floor(h / 2)) + getDoorOffset(h);
+        break;
+      case 'W':
+        startX = coords.x + 1;
+        startY = (coords.y - Math.floor(h / 2)) + getDoorOffset(h);
+        break;
+      case 'N':
+        startX = (coords.x - Math.floor(w / 2)) + getDoorOffset(w);
+        startY = coords.y + 1;
+        break;
+      case 'S':
+        startX = (coords.x - Math.floor(w / 2)) + getDoorOffset(w);
+        startY = coords.y - h;
+        break;
+      default:
+        break;
     }
-    return {coords: loc, openDir: directionOfNextWall};
+    // Exit if room would be outside matrix
+    if (startX < 0 || startY < 0 || startX + w >= wallsOrTilesStore.length || startY + h >= wallsOrTilesStore[0].length) {
+      continue;
+    }
+    // check if all spaces are clear
+    for (let i = startX; i < startX + w; i++) {
+      if (wallsOrTilesStore[i].slice(startY, startY + h).every(tile => tile === tileType.w)) {
+        numClear++;
+      }
+    }
+    if (numClear === w) {
+      createRoomAtLocation(wallsOrTilesStore, {x: startX, y: startY}, {x: w, y: h});
+      wallsOrTilesStore[coords.x][coords.y] = 1;
+      return wallsOrTilesStore;
+    }
   }
 }
